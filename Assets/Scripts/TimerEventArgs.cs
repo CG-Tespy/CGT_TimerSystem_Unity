@@ -24,5 +24,6 @@ namespace CGT.Unity.TimerSys
         {
             protected Stopwatch stopwatch;
         }
+
     }
 }
