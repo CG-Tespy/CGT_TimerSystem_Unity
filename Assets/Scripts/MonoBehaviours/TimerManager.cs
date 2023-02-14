@@ -38,7 +38,7 @@ namespace CGT.Unity.TimerSys
             if (alreadyStarted)
                 return;
 
-            inQuestion.Start();
+            inQuestion.StartTimer();
         }
 
         /// <summary>
@@ -74,20 +74,14 @@ namespace CGT.Unity.TimerSys
         /// running.
         /// </summary>
         /// <param name="timerNumber"></param>
-        public virtual void StartCountdown(int timerNumber, double seconds)
-        {
-            StartCountdown(timerNumber, TimeSpan.FromSeconds(seconds));
-        }
-
-        public virtual void StartCountdown(int timerNumber, TimeSpan duration)
+        public virtual void StartCountdown(int timerNumber)
         {
             Countdown inQuestion = GetCountdown(timerNumber);
             bool alreadyStarted = inQuestion.IsRunning;
             if (alreadyStarted)
                 return;
 
-            inQuestion.SetFor(duration);
-            inQuestion.Start();
+            inQuestion.StartTimer();
         }
 
         protected static int millisecondsPerSecond = 1000;
@@ -98,12 +92,17 @@ namespace CGT.Unity.TimerSys
             return countdowns[timerNumber];
         }
 
+        public virtual void SetCountdownFor(int number, TimeSpan duration)
+        {
+            Countdown inQuestion = GetCountdown(number);
+            inQuestion.SetFor(duration);
+        }
+
         public virtual void StopCountdown(int timerNum)
         {
             Countdown inQuestion = GetCountdown(timerNum);
             inQuestion.Stop();
         }
-
 
         public virtual TimeSpan CountdownTimeLeft(int timerNum)
         {
@@ -142,5 +141,15 @@ namespace CGT.Unity.TimerSys
         /// How many Stopwatches are currently being kept track of by this manager
         /// </summary>
         public virtual int StopwatchCount { get { return stopwatches.Count; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>The current time of the Countdown assigned to the passed number.</returns>
+        public virtual TimeSpan GetCountdownCurrentTime(int timerNum)
+        {
+            Countdown inQuestion = GetCountdown(timerNum);
+            return inQuestion.CurrentTime;
+        }
     }
 }
