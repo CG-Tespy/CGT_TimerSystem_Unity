@@ -55,7 +55,7 @@ namespace CGT.Unity.TimerSys
 
         protected TimeSpan timeLeft;
 
-        public override void Start()
+        public override void StartTimer()
         {
             if (this.IsRunning) 
                 // ^ We don't want expectedEndTime to get updated if this isn't running, hence
@@ -67,7 +67,7 @@ namespace CGT.Unity.TimerSys
             // being paused. In which case, we need to set expectedEndTime based on
             // how much time was left right as the pausing happened
 
-            base.Start();
+            base.StartTimer();
         }     
 
         protected virtual void ResetExpectedEndTime()
@@ -100,9 +100,9 @@ namespace CGT.Unity.TimerSys
         /// Stops this from running and sets this to the time it was last set to.
         /// This does NOT trigger the OnStop event.
         /// </summary>
-        public override void Reset()
+        public override void ResetTimer()
         {
-            base.Reset();
+            base.ResetTimer();
             ResetTimeLeft();
         }
 
@@ -121,9 +121,9 @@ namespace CGT.Unity.TimerSys
         /// Resets this and starts it up if it's not already running. 
         /// This does NOT raise the OnStart or OnReset events.
         /// </summary>
-        public override void Restart()
+        public override void RestartTimer()
         {
-            base.Restart();
+            base.RestartTimer();
             ResetTimeLeft();
             ResetExpectedEndTime();
         }

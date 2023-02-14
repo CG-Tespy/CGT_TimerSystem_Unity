@@ -6,6 +6,6 @@ namespace CGT.Unity.TimerSys
 {
     public interface IResettable
     {
-        void Reset();
+        void ResetTimer();
     }
 }

@@ -33,7 +33,7 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator LastsForIntendedTime()
         {
-            testCountdown.Start();
+            testCountdown.StartTimer();
 
             // If they end at roughly the same time, then it's a pass
             yield return new WaitForSeconds(testDuration.Seconds);
@@ -58,7 +58,7 @@ namespace TimerSys.Tests
         public virtual IEnumerator StopsAtRightTime()
         {
             TimeSpan halfTestDuration = TimeSpan.FromTicks(testDuration.Ticks / 2);
-            testCountdown.Start();
+            testCountdown.StartTimer();
 
             yield return new WaitForSeconds(halfTestDuration.Seconds);
             testCountdown.Stop();
@@ -73,11 +73,11 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator ResetsToRightTime()
         {
-            testCountdown.Start();
+            testCountdown.StartTimer();
 
             yield return new WaitForSeconds(testDuration.Seconds);
 
-            testCountdown.Reset();
+            testCountdown.ResetTimer();
             Assert.IsTrue(CountdownAtTestDuration);
         }
 
@@ -94,10 +94,10 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator SetsTimeCorrectlyOnMidRunRestart()
         {
-            testCountdown.Start();
+            testCountdown.StartTimer();
             yield return new WaitForSeconds(testDuration.Seconds / 2);
 
-            testCountdown.Restart();
+            testCountdown.RestartTimer();
             Assert.IsTrue(CountdownWithinBeginMarginOfError);
         }
 
@@ -113,7 +113,7 @@ namespace TimerSys.Tests
         [Test]
         public virtual void SetsTimeCorrectlyOnPreRunRestart()
         {
-            testCountdown.Restart();
+            testCountdown.RestartTimer();
             Assert.IsTrue(CountdownWithinBeginMarginOfError);
         }
 
@@ -121,7 +121,7 @@ namespace TimerSys.Tests
         public virtual void TearDown()
         {
             testCountdown.Stop();
-            testCountdown.Reset();
+            testCountdown.ResetTimer();
             testCountdown.OnFinish -= OnCountdownFinish;
         }
 

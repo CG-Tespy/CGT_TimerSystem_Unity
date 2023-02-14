@@ -2,6 +2,6 @@
 {
     public interface IRestartable 
     {
-        void Restart();
+        void RestartTimer();
     }
 }

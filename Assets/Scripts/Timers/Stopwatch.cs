@@ -34,9 +34,9 @@ namespace CGT.Unity.TimerSys
         /// <summary>
         /// Sets its time to zero while stopping this from measuring how much time's elapsed.
         /// </summary>
-        public override void Reset()
+        public override void ResetTimer()
         {
-            base.Reset();
+            base.ResetTimer();
         }
 
         protected override void ResetBaseTimer()
@@ -47,9 +47,9 @@ namespace CGT.Unity.TimerSys
         /// <summary>
         /// Has this start measuring again from zero.
         /// </summary>
-        public override void Restart()
+        public override void RestartTimer()
         {
-            base.Restart();
+            base.RestartTimer();
         }
 
         protected override void RestartBaseTimer()
