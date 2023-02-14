@@ -17,16 +17,21 @@ namespace TimerSys.Tests
         public virtual void SetUp()
         {
             testDuration = TimeSpan.FromMilliseconds(milliseconds);
-            testCountdown.SetFor(testDuration);
-            testCountdown.OnFinish = OnCountdownFinish;
+            SetUpTestCountdown();
         }
         protected double milliseconds = 2000;
         protected TimeSpan testDuration;
 
+        protected virtual void SetUpTestCountdown()
+        {
+            testCountdown.SetFor(testDuration);
+            testCountdown.OnFinish = OnCountdownFinish;
+        }
+
         protected Countdown testCountdown = new Countdown();
 
         [UnityTest]
-        public IEnumerator LastsForIntendedTime()
+        public virtual IEnumerator LastsForIntendedTime()
         {
             testCountdown.Start();
 
@@ -120,6 +125,5 @@ namespace TimerSys.Tests
             testCountdown.OnFinish -= OnCountdownFinish;
         }
 
-        
     }
 }
