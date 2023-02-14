@@ -13,7 +13,7 @@ namespace CGT.Unity.TimerSys
     {
         public abstract TimeSpan CurrentTime { get; protected set; }
 
-        public virtual void StartTimer()
+        public virtual void StartUp()
         {
             if (IsRunning)
                 return;
@@ -46,7 +46,7 @@ namespace CGT.Unity.TimerSys
 
         public Action<TimerEventArgs> OnStop { get; set; } = delegate { };
 
-        public virtual void ResetTimer()
+        public virtual void Reset()
         {
             StopBaseTimer();
             ResetBaseTimer();
@@ -57,7 +57,7 @@ namespace CGT.Unity.TimerSys
 
         public Action<TimerEventArgs> OnReset { get; set; } = delegate { };
 
-        public virtual void RestartTimer()
+        public virtual void Restart()
         {
             RestartBaseTimer();
             AlertListenersFor(OnRestart);

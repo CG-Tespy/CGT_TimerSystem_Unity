@@ -25,7 +25,7 @@ namespace TimerSys.Tests
         [UnityTest]
         public IEnumerator StopsAtRightTime()
         {
-            testStopwatch.StartTimer();
+            testStopwatch.StartUp();
 
             // If they end at roughly the same time, then it's a pass
             yield return new WaitForSeconds(testDuration.Seconds);
@@ -46,11 +46,11 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator ResetsToRightTime()
         {
-            testStopwatch.StartTimer();
+            testStopwatch.StartUp();
 
             yield return new WaitForSeconds(testDuration.Seconds / 1.25f);
 
-            testStopwatch.ResetTimer();
+            testStopwatch.Reset();
             Assert.IsTrue(AtStartDuration);
         }
 
@@ -64,7 +64,7 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator RestartStartCountingBeforeregularStart()
         {
-            testStopwatch.RestartTimer();
+            testStopwatch.Restart();
             yield return new WaitForSeconds(testDuration.Seconds / 2);
             Assert.IsTrue(HasNonZeroTimeMeasured);
         }
@@ -77,10 +77,10 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator RestartResetsTimeAfterRegularStart()
         {
-            testStopwatch.StartTimer();
+            testStopwatch.StartUp();
             yield return new WaitForSeconds(testDuration.Seconds);
 
-            testStopwatch.RestartTimer();
+            testStopwatch.Restart();
             Assert.IsTrue(WithinStartDurationMarginOfError);
         }
 
@@ -95,7 +95,7 @@ namespace TimerSys.Tests
         public virtual void TearDown()
         {
             testStopwatch.Stop();
-            testStopwatch.ResetTimer();
+            testStopwatch.Reset();
         }
     }
 }

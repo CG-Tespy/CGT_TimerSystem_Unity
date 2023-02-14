@@ -38,7 +38,7 @@ namespace CGT.Unity.TimerSys
             if (alreadyStarted)
                 return;
 
-            inQuestion.StartTimer();
+            inQuestion.StartUp();
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace CGT.Unity.TimerSys
             if (alreadyStarted)
                 return;
 
-            inQuestion.StartTimer();
+            inQuestion.StartUp();
         }
 
         protected static int millisecondsPerSecond = 1000;

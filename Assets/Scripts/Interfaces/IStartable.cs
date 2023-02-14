@@ -6,6 +6,6 @@ namespace CGT.Unity.TimerSys
 {
     public interface IStartable
     {
-        void StartTimer();
+        void StartUp();
     }
 }
