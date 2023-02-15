@@ -10,64 +10,24 @@ namespace CGT.Unity.TimerSys
     public class MainTimerManager : MonoBehaviour
     {
         public virtual uint CountdownCount { get { return countdownManager.TimerCount; } }
-        protected IDictionary<int, Stopwatch> stopwatches = new Dictionary<int, Stopwatch>();
+        public virtual uint StopwatchCount { get { return stopwatchManager.TimerCount; } }
 
         protected CountdownManager countdownManager = new CountdownManager();
+        protected StopwatchManager stopwatchManager = new StopwatchManager();
 
-        protected virtual void Awake()
-        {
-            SetUpInitialTimers();
-        }
-
-        protected virtual void SetUpInitialTimers()
-        {
-            for (int i = 0; i < startingTimerPerTypeCount; i++)
-            {
-                stopwatches.Add(i, new Stopwatch());
-            }
-        }
-
-        protected int startingTimerPerTypeCount = 10;
 
         /// <summary>
         /// Starts the Stopwatch with the passed ID
         /// </summary>
-        /// <param name="timerNumber"></param>
-        public virtual void StartStopwatch(int timerNumber)
+        /// <param name="id"></param>
+        public virtual void StartStopwatch(uint id)
         {
-            Stopwatch inQuestion = GetStopwatch(timerNumber);
-            bool alreadyStarted = inQuestion.IsRunning;
-            if (alreadyStarted)
-                return;
-
-            inQuestion.StartUp();
+            stopwatchManager.StartTimer(id);
         }
 
-        /// <summary>
-        /// Returns the Stopwatch with the passed ID
-        /// </summary>
-        /// <param name="timerNumber"></param>
-        protected virtual Stopwatch GetStopwatch(int timerNumber)
+        public virtual void StopStopwatch(uint id)
         {
-            EnsureTimersExistFor(timerNumber);
-            return stopwatches[timerNumber];
-        }
-
-        protected virtual void EnsureTimersExistFor(int recorderNum)
-        {
-            bool itExists = stopwatches[recorderNum] != null;
-            if (!itExists)
-            {
-                // We want the amounts of Stopwatches and Countdowns always
-                // be the same
-                stopwatches.Add(recorderNum, new Stopwatch());
-            }
-        }
-
-        public virtual void StopStopwatch(int timerNum)
-        {
-            Stopwatch inQuestion = GetStopwatch(timerNum);
-            inQuestion.Stop();
+            stopwatchManager.StopTimer(id);
         }
 
         /// <summary>
@@ -98,19 +58,6 @@ namespace CGT.Unity.TimerSys
         }
 
         public delegate void TimerEventHandler(int timerNumber);
-
-
-        public virtual void ListenForStopwatch(ElapsedEventArgs thing)
-        {
-            
-        }
-
-
-
-        /// <summary>
-        /// How many Stopwatches are currently being kept track of by this manager
-        /// </summary>
-        public virtual int StopwatchCount { get { return stopwatches.Count; } }
 
         /// <summary>
         /// 
