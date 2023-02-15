@@ -9,8 +9,8 @@ namespace CGT.Unity.TimerSys
     [AddComponentMenu("CGT TimerSys/Timer Manager")]
     public class MainTimerManager : MonoBehaviour
     {
-        public virtual uint CountdownCount { get { return countdownManager.TimerCount; } }
-        public virtual uint StopwatchCount { get { return stopwatchManager.TimerCount; } }
+        public virtual int CountdownCount { get { return countdownManager.TimerCount; } }
+        public virtual int StopwatchCount { get { return stopwatchManager.TimerCount; } }
 
         protected CountdownManager countdownManager = new CountdownManager();
         protected StopwatchManager stopwatchManager = new StopwatchManager();
@@ -19,42 +19,42 @@ namespace CGT.Unity.TimerSys
         /// <summary>
         /// Starts the Stopwatch with the passed ID
         /// </summary>
-        /// <param name="id"></param>
-        public virtual void StartStopwatch(uint id)
+        /// <param name="handler"></param>
+        public virtual void StartStopwatch(TimerKey handler)
         {
-            stopwatchManager.StartTimer(id);
+            stopwatchManager.StartTimer(handler);
         }
 
-        public virtual void StopStopwatch(uint id)
+        public virtual void StopStopwatch(TimerKey handler)
         {
-            stopwatchManager.StopTimer(id);
+            stopwatchManager.StopTimer(handler);
         }
 
         /// <summary>
         /// Starts the Countdown with the passed ID. Does nothing if it's already
         /// running.
         /// </summary>
-        /// <param name="id"></param>
-        public virtual void StartCountdown(uint id)
+        /// <param name="handler"></param>
+        public virtual void StartCountdown(TimerKey handler)
         {
-            countdownManager.StartTimer(id);
+            countdownManager.StartTimer(handler);
         }
 
         protected static int millisecondsPerSecond = 1000;
 
-        public virtual void SetCountdownFor(uint id, TimeSpan duration)
+        public virtual void SetCountdownFor(TimerKey handler, TimeSpan duration)
         {
-            countdownManager.SetCountdownFor(id, duration);
+            countdownManager.SetCountdownFor(handler, duration);
         }
 
-        public virtual void StopCountdown(uint id)
+        public virtual void StopCountdown(TimerKey handler)
         {
-            countdownManager.StopTimer(id);
+            countdownManager.StopTimer(handler);
         }
 
-        public virtual TimeSpan CountdownTimeLeft(uint id)
+        public virtual TimeSpan CountdownTimeLeft(TimerKey handler)
         {
-            return countdownManager.GetCountdownTimeLeft(id);
+            return countdownManager.GetCountdownTimeLeft(handler);
         }
 
         public delegate void TimerEventHandler(int timerNumber);
@@ -63,19 +63,19 @@ namespace CGT.Unity.TimerSys
         /// 
         /// </summary>
         /// <returns>The current time of the Countdown assigned to the passed number.</returns>
-        public virtual TimeSpan GetCountdownCurrentTime(uint id)
+        public virtual TimeSpan GetCountdownCurrentTime(TimerKey handler)
         {
-            return countdownManager.GetCountdownTimeLeft(id);
+            return countdownManager.GetCountdownTimeLeft(handler);
         }
 
-        public virtual System.Action<TimerEventArgs> GetCountdownFinishEvent(uint id)
+        public virtual System.Action<TimerEventArgs> GetCountdownFinishEvent(TimerKey handler)
         {
-            return countdownManager.GetCountdownFinishEvent(id);
+            return countdownManager.GetCountdownFinishEvent(handler);
         }
 
-        public virtual void ResetCountdown(uint id)
+        public virtual void ResetCountdown(TimerKey handler)
         {
-            countdownManager.ResetTimer(id);
+            countdownManager.ResetTimer(handler);
         }
     }
 }

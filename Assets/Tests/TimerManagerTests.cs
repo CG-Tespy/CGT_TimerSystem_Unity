@@ -16,21 +16,6 @@ namespace TimerSys.Tests
 
         protected MainTimerManager timerManager;
 
-        [Test]
-        public virtual void StartsWithRightCountdownAmounts()
-        {
-            bool success = timerManager.CountdownCount == startingTimerPerTypeCount;
-            Assert.IsTrue(success);
-        }
-
-        protected int startingTimerPerTypeCount = 10;
-
-        [Test]
-        public virtual void StartsWithRightStopwatchAmounts()
-        {
-            bool success = timerManager.StopwatchCount == startingTimerPerTypeCount;
-            Assert.IsTrue(success);
-        }
 
         [TearDown]
         public virtual void TearDown()

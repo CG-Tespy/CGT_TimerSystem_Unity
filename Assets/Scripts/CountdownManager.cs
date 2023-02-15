@@ -7,27 +7,27 @@ namespace CGT.Unity.TimerSys
 {
 	public class CountdownManager : TimerManager<Countdown>
 	{
-		public virtual void SetCountdownFor(uint id, double durationInSeconds)
+		public virtual void SetCountdownFor(TimerKey handler, double durationInSeconds)
 		{
 			TimeSpan durationAsSpan = TimeSpan.FromSeconds(durationInSeconds);
-			SetCountdownFor(id, durationAsSpan);
+			SetCountdownFor(handler, durationAsSpan);
 		}
 
-		public virtual void SetCountdownFor(uint id, TimeSpan duration)
+		public virtual void SetCountdownFor(TimerKey handler, TimeSpan duration)
 		{
-			Countdown inQuestion = GetTimer(id);
+			Countdown inQuestion = GetTimer(handler);
 			inQuestion.SetFor(duration);
 		}
 
-		public virtual TimeSpan GetCountdownTimeLeft(uint id)
+		public virtual TimeSpan GetCountdownTimeLeft(TimerKey handler)
         {
-			Countdown inQuestion = GetTimer(id);
+			Countdown inQuestion = GetTimer(handler);
 			return inQuestion.TimeLeft;
         }
 
-		public virtual System.Action<TimerEventArgs> GetCountdownFinishEvent(uint id)
+		public virtual System.Action<TimerEventArgs> GetCountdownFinishEvent(TimerKey handler)
         {
-			Countdown inQuestion = GetTimer(id);
+			Countdown inQuestion = GetTimer(handler);
 			return inQuestion.OnFinish;
         }
 	}

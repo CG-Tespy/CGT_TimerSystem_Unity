@@ -7,28 +7,35 @@ namespace CGT.Unity.TimerSys
 {
 	public class CountdownController : MonoBehaviour, ICountdown
 	{
-		[SerializeField]
-        [Tooltip("Which timer this is set to. Two CountdownControllers set to the same number are treated as the same timer.")]
-		protected uint timerNumber;
+		protected virtual void Awake()
+        {
+            TimerManager = FindObjectOfType<MainTimerManager>();
+            timerKey = new TimerKey(this);
+        }
 
-		public uint TimerNumber { get { return timerNumber; } }
+        protected TimerKey timerKey;
 
+        /// <summary>
+        /// For the timer tied to this controller.
+        /// </summary>
+        public virtual TimerKey TimerKey { get { return timerKey; } }
+       
         public TimeSpan LastSetFor { get; protected set; }
 
         public Action<TimerEventArgs> OnFinish
         {
-            get { return TimerManager.GetCountdownFinishEvent(timerNumber); }
+            get { return TimerManager.GetCountdownFinishEvent(timerKey); }
 
             set
             {
-                var finishEvent = TimerManager.GetCountdownFinishEvent(timerNumber);
+                var finishEvent = TimerManager.GetCountdownFinishEvent(timerKey);
                 finishEvent = value;
             }
         }
-
+        
         public virtual TimeSpan TimeLeft { get { return CurrentTime; } }
 
-        public TimeSpan CurrentTime { get { return TimerManager.GetCountdownCurrentTime(timerNumber); }}
+        public TimeSpan CurrentTime { get { return TimerManager.GetCountdownCurrentTime(timerKey); }}
 
         public bool IsRunning
         {
@@ -74,17 +81,17 @@ namespace CGT.Unity.TimerSys
 
         public void StartUp()
         {
-            TimerManager.StartCountdown(timerNumber);
+            TimerManager.StartCountdown(timerKey);
         }
 
         public void Reset()
         {
-            TimerManager.ResetCountdown(timerNumber);
+            TimerManager.ResetCountdown(timerKey);
         }
 
         public void Stop()
         {
-            TimerManager.StopCountdown(timerNumber);
+            TimerManager.StopCountdown(timerKey);
         }
 
         public void Restart()
@@ -94,12 +101,8 @@ namespace CGT.Unity.TimerSys
     
         public virtual void SetFor(TimeSpan duration)
         {
-            TimerManager.SetCountdownFor(timerNumber, duration);
+            TimerManager.SetCountdownFor(timerKey, duration);
         }
 
-        protected virtual void Awake()
-        {
-            TimerManager = FindObjectOfType<MainTimerManager>();
-        }
     }
 }
