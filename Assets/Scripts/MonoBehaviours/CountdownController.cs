@@ -96,7 +96,7 @@ namespace CGT.Unity.TimerSys
 
         public void Restart()
         {
-            throw new NotImplementedException();
+            TimerManager.RestartCountdown(timerKey);
         }
     
         public virtual void SetFor(TimeSpan duration)
