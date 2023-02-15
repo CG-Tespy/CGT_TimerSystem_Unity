@@ -1,5 +1,4 @@
-﻿using DateTime = System.DateTime;
-using TimeSpan = System.TimeSpan;
+﻿using TimeSpan = System.TimeSpan;
 
 namespace CGT.Unity.TimerSys
 {

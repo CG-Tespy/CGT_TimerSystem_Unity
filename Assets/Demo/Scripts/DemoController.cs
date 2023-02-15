@@ -4,7 +4,7 @@ using CGT.Unity.TimerSys;
 public class DemoController : MonoBehaviour
 {
     [SerializeField]
-    protected TimerManager manager;
+    protected MainTimerManager manager;
 
     public virtual void StartTimer()
     {

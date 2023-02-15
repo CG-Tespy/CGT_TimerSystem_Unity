@@ -11,10 +11,10 @@ namespace TimerSys.Tests
         public virtual void SetUp()
         {
             GameObject newGo = new GameObject();
-            timerManager = newGo.AddComponent<TimerManager>();
+            timerManager = newGo.AddComponent<MainTimerManager>();
         }
 
-        protected TimerManager timerManager;
+        protected MainTimerManager timerManager;
 
         [Test]
         public virtual void StartsWithRightCountdownAmounts()

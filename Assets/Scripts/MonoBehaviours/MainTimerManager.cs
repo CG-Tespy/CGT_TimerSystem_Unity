@@ -6,10 +6,13 @@ using TimeSpan = System.TimeSpan;
 
 namespace CGT.Unity.TimerSys
 { 
-    public class TimerManager : MonoBehaviour
+    [AddComponentMenu("CGT TimerSys/Timer Manager")]
+    public class MainTimerManager : MonoBehaviour
     {
-        protected IDictionary<int, Countdown> countdowns = new Dictionary<int, Countdown>();
+        public virtual uint CountdownCount { get { return countdownManager.TimerCount; } }
         protected IDictionary<int, Stopwatch> stopwatches = new Dictionary<int, Stopwatch>();
+
+        protected CountdownManager countdownManager = new CountdownManager();
 
         protected virtual void Awake()
         {
@@ -21,7 +24,6 @@ namespace CGT.Unity.TimerSys
             for (int i = 0; i < startingTimerPerTypeCount; i++)
             {
                 stopwatches.Add(i, new Stopwatch());
-                countdowns.Add(i, new Countdown());
             }
         }
 
@@ -53,12 +55,11 @@ namespace CGT.Unity.TimerSys
 
         protected virtual void EnsureTimersExistFor(int recorderNum)
         {
-            bool itExists = countdowns[recorderNum] != null;
+            bool itExists = stopwatches[recorderNum] != null;
             if (!itExists)
             {
                 // We want the amounts of Stopwatches and Countdowns always
                 // be the same
-                countdowns.Add(recorderNum, new Countdown());
                 stopwatches.Add(recorderNum, new Stopwatch());
             }
         }
@@ -73,69 +74,38 @@ namespace CGT.Unity.TimerSys
         /// Starts the Countdown with the passed ID. Does nothing if it's already
         /// running.
         /// </summary>
-        /// <param name="timerNumber"></param>
-        public virtual void StartCountdown(int timerNumber)
+        /// <param name="id"></param>
+        public virtual void StartCountdown(uint id)
         {
-            Countdown inQuestion = GetCountdown(timerNumber);
-            bool alreadyStarted = inQuestion.IsRunning;
-            if (alreadyStarted)
-                return;
-
-            inQuestion.StartUp();
+            countdownManager.StartTimer(id);
         }
 
         protected static int millisecondsPerSecond = 1000;
 
-        protected virtual Countdown GetCountdown(int timerNumber)
+        public virtual void SetCountdownFor(uint id, TimeSpan duration)
         {
-            EnsureTimersExistFor(timerNumber);
-            return countdowns[timerNumber];
+            countdownManager.SetCountdownFor(id, duration);
         }
 
-        public virtual void SetCountdownFor(int number, TimeSpan duration)
+        public virtual void StopCountdown(uint id)
         {
-            Countdown inQuestion = GetCountdown(number);
-            inQuestion.SetFor(duration);
+            countdownManager.StopTimer(id);
         }
 
-        public virtual void StopCountdown(int timerNum)
+        public virtual TimeSpan CountdownTimeLeft(uint id)
         {
-            Countdown inQuestion = GetCountdown(timerNum);
-            inQuestion.Stop();
+            return countdownManager.GetCountdownTimeLeft(id);
         }
 
-        public virtual TimeSpan CountdownTimeLeft(int timerNum)
-        {
-            Countdown inQuestion = GetCountdown(timerNum);
-            return inQuestion.CurrentTime;
-        }
-
-        public virtual void ListenForCountdownStart(int timerNum)
-        {
-
-        }
         public delegate void TimerEventHandler(int timerNumber);
-        public virtual void ListenForCountdownEnd(int timerNum, ElapsedEventHandler response)
-        {
-            Countdown inQuestion = GetCountdown(timerNum);
-            //inQuestion.Elapsed += response;
-        }
 
-        public virtual void UnlistenForCountdownEnd(int timerNum, ElapsedEventHandler eventHandler)
-        {
-            Countdown inQuestion = GetCountdown(timerNum);
-            //inQuestion.Elapsed -= eventHandler;
-        }
 
         public virtual void ListenForStopwatch(ElapsedEventArgs thing)
         {
             
         }
 
-        /// <summary>
-        /// How many Countdowns are currently being kept track of by this manager
-        /// </summary>
-        public virtual int CountdownCount {  get { return countdowns.Count; } }
+
 
         /// <summary>
         /// How many Stopwatches are currently being kept track of by this manager
@@ -146,22 +116,19 @@ namespace CGT.Unity.TimerSys
         /// 
         /// </summary>
         /// <returns>The current time of the Countdown assigned to the passed number.</returns>
-        public virtual TimeSpan GetCountdownCurrentTime(int timerNum)
+        public virtual TimeSpan GetCountdownCurrentTime(uint id)
         {
-            Countdown inQuestion = GetCountdown(timerNum);
-            return inQuestion.CurrentTime;
+            return countdownManager.GetCountdownTimeLeft(id);
         }
 
-        public virtual System.Action<TimerEventArgs> GetCountdownFinishEvent(int timerNumber)
+        public virtual System.Action<TimerEventArgs> GetCountdownFinishEvent(uint id)
         {
-            Countdown inQuestion = GetCountdown(timerNumber);
-            return inQuestion.OnFinish;
+            return countdownManager.GetCountdownFinishEvent(id);
         }
 
-        public virtual void ResetCountdown(int timerNumber)
+        public virtual void ResetCountdown(uint id)
         {
-            Countdown inQuestion = GetCountdown(timerNumber);
-            inQuestion.Reset();
+            countdownManager.ResetTimer(id);
         }
     }
 }

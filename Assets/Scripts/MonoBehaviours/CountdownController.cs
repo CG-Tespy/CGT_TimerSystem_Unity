@@ -9,9 +9,9 @@ namespace CGT.Unity.TimerSys
 	{
 		[SerializeField]
         [Tooltip("Which timer this is set to. Two CountdownControllers set to the same number are treated as the same timer.")]
-		protected int timerNumber;
+		protected uint timerNumber;
 
-		public int TimerNumber { get { return timerNumber; } }
+		public uint TimerNumber { get { return timerNumber; } }
 
         public TimeSpan LastSetFor { get; protected set; }
 
@@ -70,7 +70,7 @@ namespace CGT.Unity.TimerSys
             }
         }
 
-        protected static TimerManager TimerManager;
+        protected static MainTimerManager TimerManager;
 
         public void StartUp()
         {
@@ -99,7 +99,7 @@ namespace CGT.Unity.TimerSys
 
         protected virtual void Awake()
         {
-            TimerManager = FindObjectOfType<TimerManager>();
+            TimerManager = FindObjectOfType<MainTimerManager>();
         }
     }
 }

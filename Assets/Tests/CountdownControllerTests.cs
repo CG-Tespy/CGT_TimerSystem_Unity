@@ -19,10 +19,10 @@ namespace TimerSys.Tests
         protected virtual void SetUpTimerManager()
         {
             GameObject managerGO = new GameObject("TimerManager");
-            timerManager = managerGO.AddComponent<TimerManager>();
+            timerManager = managerGO.AddComponent<MainTimerManager>();
         }
 
-        protected TimerManager timerManager;
+        protected MainTimerManager timerManager;
 
         protected override void SetUpTestCountdown()
         {
