@@ -17,21 +17,18 @@ namespace CGT.Unity.TimerSys
 
         public Action<TimerEventArgs> OnFinish
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { return TimerManager.GetCountdownFinishEvent(timerNumber); }
 
             set
             {
-                throw new NotImplementedException();
+                var finishEvent = TimerManager.GetCountdownFinishEvent(timerNumber);
+                finishEvent = value;
             }
         }
 
-        public TimeSpan CurrentTime
-        {
-            get { return TimerManager.GetCountdownCurrentTime(timerNumber); }
-        }
+        public virtual TimeSpan TimeLeft { get { return CurrentTime; } }
+
+        public TimeSpan CurrentTime { get { return TimerManager.GetCountdownCurrentTime(timerNumber); }}
 
         public bool IsRunning
         {
@@ -82,7 +79,7 @@ namespace CGT.Unity.TimerSys
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            TimerManager.ResetCountdown(timerNumber);
         }
 
         public void Stop()
@@ -95,6 +92,11 @@ namespace CGT.Unity.TimerSys
             throw new NotImplementedException();
         }
     
+        public virtual void SetFor(TimeSpan duration)
+        {
+            TimerManager.SetCountdownFor(timerNumber, duration);
+        }
+
         protected virtual void Awake()
         {
             TimerManager = FindObjectOfType<TimerManager>();

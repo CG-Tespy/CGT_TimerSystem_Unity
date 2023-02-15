@@ -151,5 +151,17 @@ namespace CGT.Unity.TimerSys
             Countdown inQuestion = GetCountdown(timerNum);
             return inQuestion.CurrentTime;
         }
+
+        public virtual System.Action<TimerEventArgs> GetCountdownFinishEvent(int timerNumber)
+        {
+            Countdown inQuestion = GetCountdown(timerNumber);
+            return inQuestion.OnFinish;
+        }
+
+        public virtual void ResetCountdown(int timerNumber)
+        {
+            Countdown inQuestion = GetCountdown(timerNumber);
+            inQuestion.Reset();
+        }
     }
 }

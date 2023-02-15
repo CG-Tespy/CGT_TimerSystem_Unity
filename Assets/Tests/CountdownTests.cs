@@ -28,7 +28,7 @@ namespace TimerSys.Tests
             testCountdown.OnFinish = OnCountdownFinish;
         }
 
-        protected Countdown testCountdown = new Countdown();
+        protected ICountdown testCountdown = new Countdown();
 
         [UnityTest]
         public virtual IEnumerator LastsForIntendedTime()
