@@ -31,7 +31,7 @@ namespace TimerSys.Tests
         protected virtual void SetUpCountdownComponent()
         {
             GameObject countdownGO = new GameObject("CountdownTimer");
-            countdownGO.AddComponent<CountdownController>();
+            countdownComponent = countdownGO.AddComponent<CountdownController>();
         }
 
         protected CountdownController countdownComponent;
@@ -43,16 +43,25 @@ namespace TimerSys.Tests
 
         }
 
-
         [UnityTest]
         public override IEnumerator LastsForIntendedTime()
         {
-            countdownComponent.StartTimer();
+            countdownComponent.StartUp();
 
             // If they end at roughly the same time, then it's a pass
             yield return new WaitForSeconds(testDuration.Seconds);
-            testCountdown.Stop();
+            countdownComponent.Stop();
             Assert.IsTrue(CountdownWithinEndMarginOfError);
+        }
+
+        protected override bool CountdownWithinEndMarginOfError
+        {
+            get
+            {
+                TimeSpan currentTime = countdownComponent.CurrentTime;
+                return System.Math.Abs(currentTime.TotalMilliseconds) <=
+                endMarginOfError;
+            }
         }
     }
 }
