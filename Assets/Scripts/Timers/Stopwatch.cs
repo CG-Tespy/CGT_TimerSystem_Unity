@@ -1,60 +1,17 @@
 ﻿using System;
-using BaseStopwatch = System.Diagnostics.Stopwatch;
 
 namespace CGT.Unity.TimerSys
 {
     public class Stopwatch : ObservableTimer
     {
-        public override TimeSpan CurrentTime
+        public Stopwatch()
         {
-            get { return baseStopwatch.Elapsed; }
-            protected set
-            {
-                throw new System.InvalidOperationException("Can't rig this Stopwatch's time through CurrentTime");
-            }
+            timeToResetTo = 0; // Since stopwatches always reset to 0, unlike Countdowns
         }
 
-        protected BaseStopwatch baseStopwatch = new BaseStopwatch();
-
-        public override bool IsRunning
+        protected override void ApplyTimeElapsed(double hoursElapsed)
         {
-            get { return baseStopwatch.IsRunning; }
-        }
-
-        protected override void StartBaseTimer()
-        {
-            baseStopwatch.Start();
-        }
-
-        protected override void StopBaseTimer()
-        {
-            baseStopwatch.Stop();
-        }
-
-        /// <summary>
-        /// Sets its time to zero while stopping this from measuring how much time's elapsed.
-        /// </summary>
-        public override void Reset()
-        {
-            base.Reset();
-        }
-
-        protected override void ResetBaseTimer()
-        {
-            baseStopwatch.Reset();
-        }
-
-        /// <summary>
-        /// Has this start measuring again from zero.
-        /// </summary>
-        public override void Restart()
-        {
-            base.Restart();
-        }
-
-        protected override void RestartBaseTimer()
-        {
-            baseStopwatch.Restart();
+            currentTime += hoursElapsed;
         }
     }
 }

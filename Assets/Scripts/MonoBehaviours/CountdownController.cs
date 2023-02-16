@@ -7,7 +7,72 @@ namespace CGT.Unity.TimerSys
 {
 	public class CountdownController : MonoBehaviour, ICountdown
 	{
-		protected virtual void Awake()
+        event OnTimerEvent ICountdown.OnFinish
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnTimerEvent IObservableTimer.OnStart
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnTimerEvent IObservableTimer.OnStop
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnTimerEvent IObservableTimer.OnReset
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event OnTimerEvent IObservableTimer.OnRestart
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        protected virtual void Awake()
         {
             TimerManager = FindObjectOfType<MainTimerManager>();
             timerKey = new TimerKey(this);
@@ -19,57 +84,14 @@ namespace CGT.Unity.TimerSys
         /// For the timer tied to this controller.
         /// </summary>
         public virtual TimerKey TimerKey { get { return timerKey; } }
-       
+        
         public TimeSpan LastSetFor { get; protected set; }
 
-        public Action<TimerEventArgs> OnFinish
-        {
-            get { return TimerManager.GetCountdownFinishEvent(timerKey); }
-
-            set
-            {
-                var finishEvent = TimerManager.GetCountdownFinishEvent(timerKey);
-                finishEvent = value;
-            }
-        }
-        
         public virtual TimeSpan TimeLeft { get { return CurrentTime; } }
 
         public TimeSpan CurrentTime { get { return TimerManager.GetCountdownCurrentTime(timerKey); }}
 
         public bool IsRunning
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public Action<TimerEventArgs> OnStart
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public Action<TimerEventArgs> OnStop
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public Action<TimerEventArgs> OnReset
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public Action<TimerEventArgs> OnRestart
         {
             get
             {
@@ -104,5 +126,9 @@ namespace CGT.Unity.TimerSys
             TimerManager.SetCountdownFor(timerKey, duration);
         }
 
+        public void Tick()
+        {
+            Debug.LogWarning("Should not call Tick from a CountdownController");
+        }
     }
 }

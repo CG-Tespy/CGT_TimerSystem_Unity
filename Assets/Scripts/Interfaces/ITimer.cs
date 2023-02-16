@@ -9,5 +9,6 @@ namespace CGT.Unity.TimerSys
     {
         TimeSpan CurrentTime { get; }
         bool IsRunning { get; }
+        void Tick();
     }        
 }

@@ -1,71 +1,116 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using TimeSpan = System.TimeSpan;
 using UnityEngine;
 
 namespace CGT.Unity.TimerSys
 {
     /// <summary>
-    /// Timer that both implements the Observer Pattern and wraps another type
-    /// of timer.
+    /// Timer that implements the Observer Pattern.
     /// </summary>
     public abstract class ObservableTimer : IObservableTimer
     {
-        public abstract TimeSpan CurrentTime { get; protected set; }
+        public virtual TimeSpan CurrentTime
+        {
+            get { return TimeSpan.FromHours(currentTime); }
+            protected set { currentTime = value.TotalHours; }
+        }
+
+        // Measured in hours to get more mileage out of the double data type
+        protected double currentTime;
 
         public virtual void StartUp()
         {
             if (IsRunning)
-                return;
-            StartBaseTimer();
+                return; 
+            // ^So we don't falsely alert event listeners. We apply this approach to some
+            // other funcs here as well
+
+            IsRunning = true;
             AlertListenersFor(OnStart);
         }
 
-        public abstract bool IsRunning { get; }
+        public virtual bool IsRunning { get; protected set; }
 
-        protected abstract void StartBaseTimer();
-
-        protected virtual void AlertListenersFor(System.Action<TimerEventArgs> theEvent)
+        protected virtual void AlertListenersFor(OnTimerEvent theEvent)
         {
             TimerEventArgs eventArgs = new TimerEventArgs();
             eventArgs.Timer = this;
             theEvent.Invoke(eventArgs);
         }
 
-        public Action<TimerEventArgs> OnStart { get; set; } = delegate { };
+        public event OnTimerEvent OnStart = delegate { };
 
         public virtual void Stop()
         {
             if (!IsRunning)
                 return;
-            StopBaseTimer();
+            IsRunning = false;
             AlertListenersFor(OnStop);
         }
 
-        protected abstract void StopBaseTimer();
+        public event OnTimerEvent OnStop = delegate { };
 
-        public Action<TimerEventArgs> OnStop { get; set; } = delegate { };
-
+        /// <summary>
+        /// Sets the timer back to the appropriate time before stopping it from running.
+        /// </summary>
         public virtual void Reset()
         {
-            StopBaseTimer();
-            ResetBaseTimer();
+            currentTime = timeToResetTo;
+            IsRunning = false;
             AlertListenersFor(OnReset);
         }
 
-        protected abstract void ResetBaseTimer();
+        protected double timeToResetTo; // Also in hours
 
-        public Action<TimerEventArgs> OnReset { get; set; } = delegate { };
+        public event OnTimerEvent OnReset = delegate { };
 
+        /// <summary>
+        /// Resets then starts the timer. Does not trigger the event listeners for those
+        /// actions.
+        /// </summary>
         public virtual void Restart()
         {
-            RestartBaseTimer();
+            currentTime = timeToResetTo;
+            IsRunning = true;
             AlertListenersFor(OnRestart);
         }
 
-        protected abstract void RestartBaseTimer();
+        public event OnTimerEvent OnRestart = delegate { };
 
-        public Action<TimerEventArgs> OnRestart { get; set; } = delegate { };
+        /// <summary>
+        /// Called to have this timer register a single frame's worth of time passing,
+        /// provided it's running.
+        /// </summary>
+        public virtual void Tick()
+        {
+            if (!IsRunning)
+                return;
 
+            double scaledSecondsPassed = Time.unscaledDeltaTime * TimeScale;
+            double scaledHoursPassed = SecondsToHours(scaledSecondsPassed);
+            ApplyTimeElapsed(scaledHoursPassed);
+        }
+
+        /// <summary>
+        /// The multiplier for the time that each Tick registers as having passed. Gives you
+        /// the option to have this timer count time faster or slower than it's
+        /// actually going.
+        /// </summary>
+        public virtual float TimeScale
+        {
+            get { return timeScale; }
+            set { timeScale = value; }
+        }
+
+        protected float timeScale = 1f;
+
+        private double SecondsToHours(double seconds)
+        {
+            double toMinutes = seconds * 60;
+            double toHours = toMinutes * 60;
+            return toHours;
+        }
+
+        protected abstract void ApplyTimeElapsed(double scaledHoursElapsed);
+        
     }
 }

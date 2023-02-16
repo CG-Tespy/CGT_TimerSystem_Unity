@@ -25,7 +25,7 @@ namespace TimerSys.Tests
         protected virtual void SetUpTestCountdown()
         {
             testCountdown.SetFor(testDuration);
-            testCountdown.OnFinish = OnCountdownFinish;
+            
         }
 
         protected ICountdown testCountdown = new Countdown();

@@ -67,10 +67,6 @@ namespace CGT.Unity.TimerSys
             return countdownManager.GetCountdownTimeLeft(key);
         }
 
-        public virtual System.Action<TimerEventArgs> GetCountdownFinishEvent(TimerKey key)
-        {
-            return countdownManager.GetCountdownFinishEvent(key);
-        }
 
         public virtual void ResetCountdown(TimerKey key)
         {

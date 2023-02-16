@@ -9,7 +9,7 @@ namespace CGT.Unity.TimerSys
         void SetFor(TimeSpan duration);
         TimeSpan TimeLeft { get; }
         TimeSpan LastSetFor { get; } // For resetting
-        System.Action<TimerEventArgs> OnFinish { get; set; }
+        event OnTimerEvent OnFinish;
         // ^Not all timer types really finish in the usual sense, hence why
         // this isn't in IBaseTimerEventArgs
     }

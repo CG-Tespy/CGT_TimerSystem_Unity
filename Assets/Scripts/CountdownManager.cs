@@ -19,16 +19,18 @@ namespace CGT.Unity.TimerSys
 			inQuestion.SetFor(duration);
 		}
 
-		public virtual TimeSpan GetCountdownTimeLeft(TimerKey handler)
+		public virtual TimeSpan GetCountdownTimeLeft(TimerKey key)
         {
-			Countdown inQuestion = GetTimer(handler);
+			Countdown inQuestion = GetTimer(key);
 			return inQuestion.TimeLeft;
         }
 
-		public virtual System.Action<TimerEventArgs> GetCountdownFinishEvent(TimerKey handler)
+		public virtual void ListenForCountdownFinish(TimerKey key, OnTimerEvent listener)
         {
-			Countdown inQuestion = GetTimer(handler);
-			return inQuestion.OnFinish;
+			Countdown countdown = GetTimer(key);
+			countdown.OnFinish += listener;
         }
+
+		
 	}
 }
