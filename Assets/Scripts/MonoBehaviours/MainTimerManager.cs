@@ -67,7 +67,6 @@ namespace CGT.Unity.TimerSys
             return countdownManager.GetCountdownTimeLeft(key);
         }
 
-
         public virtual void ResetCountdown(TimerKey key)
         {
             countdownManager.ResetTimer(key);
@@ -76,6 +75,17 @@ namespace CGT.Unity.TimerSys
         public virtual void RestartCountdown(TimerKey key)
         {
             countdownManager.RestartTimer(key);
+        }
+
+        public virtual TimeSpan GetCountdownTimeLastSetFor(TimerKey key)
+        {
+            return countdownManager.GetCountdownTimeLastSetFor(key);
+        }
+
+        protected virtual void Update()
+        {
+            countdownManager.TickTimers();
+            stopwatchManager.TickTimers();
         }
     }
 }

@@ -86,7 +86,10 @@ namespace CGT.Unity.TimerSys
                 return;
 
             double scaledSecondsPassed = Time.unscaledDeltaTime * TimeScale;
+            //Debug.Log("Unscaled delta time: " + Time.unscaledDeltaTime);
+            //Debug.Log("Scaled seconds passed: " + scaledSecondsPassed);
             double scaledHoursPassed = SecondsToHours(scaledSecondsPassed);
+            //Debug.Log("Scaled hours passed: " + scaledHoursPassed);
             ApplyTimeElapsed(scaledHoursPassed);
         }
 
@@ -105,8 +108,8 @@ namespace CGT.Unity.TimerSys
 
         private double SecondsToHours(double seconds)
         {
-            double toMinutes = seconds * 60;
-            double toHours = toMinutes * 60;
+            double toMinutes = seconds / 60.0;
+            double toHours = toMinutes / 60.0;
             return toHours;
         }
 

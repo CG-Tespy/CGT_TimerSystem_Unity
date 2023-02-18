@@ -62,5 +62,12 @@ namespace CGT.Unity.TimerSys
 			inQuestion.Reset();
         }
 
+		public virtual void TickTimers()
+        {
+			foreach (var timerToTick in timers.Values)
+            {
+				timerToTick.Tick();
+            }
+        }
 	}
 }

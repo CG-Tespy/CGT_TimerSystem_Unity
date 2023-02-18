@@ -31,6 +31,11 @@ namespace CGT.Unity.TimerSys
 			countdown.OnFinish += listener;
         }
 
-		
+		public virtual TimeSpan GetCountdownTimeLastSetFor(TimerKey key)
+        {
+			Countdown inQuestion = GetTimer(key);
+			return inQuestion.LastSetFor;
+        }
+
 	}
 }
