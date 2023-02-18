@@ -16,6 +16,7 @@ namespace TimerSys.Tests
             timerManager = newGo.AddComponent<MainTimerManager>();
             testDuration = TimeSpan.FromMilliseconds(milliseconds);
             timerManager.SetCountdownFor(key, testDuration);
+            timerManager.StartCountdown(key);
         }
 
         protected MainTimerManager timerManager;
@@ -28,9 +29,6 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator TimerLastsForIntendedTime()
         {
-            
-            timerManager.StartCountdown(key);
-
             // If they end at roughly the same time, then it's a pass
             yield return new WaitForSeconds(testDuration.Seconds);
             // The countdown should stop itself, so we won't stop it manually here
@@ -59,11 +57,49 @@ namespace TimerSys.Tests
         // Timers aren't always so precise, so we need margins of error like this.
         // In particular, this is for when the countdown's supposed to be over
 
+        [UnityTest]
+        public virtual IEnumerator CountdownResetsProperly()
+        {
+            yield return new WaitForSeconds(testDuration.Seconds);
+
+            timerManager.ResetCountdown(key);
+            Assert.IsTrue(CountdownAtTestDuration);
+        }
+
+        protected virtual bool CountdownAtTestDuration
+        {
+            get 
+            {
+                TimeSpan currentTime = timerManager.GetCountdownCurrentTime(key);
+                return currentTime.Equals(testDuration);
+            }
+        }
 
         [TearDown]
         public virtual void TearDown()
         {
+            timerManager.StopCountdown(key);
             GameObject.Destroy(timerManager.gameObject);
         }
+
+        [UnityTest]
+        public virtual IEnumerator CountdownSetsTimeCorrectlyOnMidRunRestart()
+        {
+            yield return new WaitForSeconds(testDuration.Seconds / 2);
+
+            timerManager.RestartCountdown(key);
+            Assert.IsTrue(CountdownWithinBeginMarginOfError);
+        }
+
+        protected virtual bool CountdownWithinBeginMarginOfError
+        {
+            get
+            {
+                TimeSpan timeLeft = timerManager.GetCountdownCurrentTime(key);
+                return testDuration.TotalMilliseconds - timeLeft.TotalMilliseconds <= beginMarginOfError;
+            }
+        }
+
+        protected float beginMarginOfError = 30;
     }
 }
