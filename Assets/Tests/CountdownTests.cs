@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Timers;
 using TimeSpan = System.TimeSpan;
 using Debug = UnityEngine.Debug;
+using CDEventManager = CGT.Unity.TimerSys.CountdownManager.CountdownEventManager;
 
 namespace TimerSys.Tests
 {
@@ -18,13 +19,16 @@ namespace TimerSys.Tests
             base.SetUp();
 
             timerManager.SetCountdownFor(key, testDuration);
-            timerManager.ListenForCountdownStart(key, OnCountdownStart);
-            timerManager.ListenForCountdownEnd(key, OnCountdownEnd);
-            timerManager.ListenForCountdownStop(key, OnCountdownStop);
-            timerManager.ListenForCountdownReset(key, OnCountdownReset);
-            timerManager.ListenForCountdownRestart(key, OnCountdownRestart);
+
+            CountdownEvents.ListenForStart(key, OnCountdownStart);
+            CountdownEvents.ListenForEnd(key, OnCountdownEnd);
+            CountdownEvents.ListenForStop(key, OnCountdownStop);
+            CountdownEvents.ListenForReset(key, OnCountdownReset);
+            CountdownEvents.ListenForRestart(key, OnCountdownRestart);
             timerManager.StartCountdown(key);
         }
+
+        protected virtual CDEventManager CountdownEvents { get { return timerManager.CountdownEvents; } }
 
 
         [UnityTest]
@@ -198,11 +202,11 @@ namespace TimerSys.Tests
             countdownFinishTriggered = countdownStartTriggered =
                 countdownStopTriggered = countdownResetTriggered = 
                 countdownRestartTriggered = false;
-            timerManager.UnlistenForCountdownEnd(key, OnCountdownEnd);
-            timerManager.UnlistenForCountdownStart(key, OnCountdownStart);
-            timerManager.UnlistenForCountdownStop(key, OnCountdownStop);
-            timerManager.UnlistenForCountdownReset(key, OnCountdownReset);
-            timerManager.UnlistenForCountdownRestart(key, OnCountdownRestart);
+            CountdownEvents.UnlistenForEnd(key, OnCountdownEnd);
+            CountdownEvents.UnlistenForStart(key, OnCountdownStart);
+            CountdownEvents.UnlistenForStop(key, OnCountdownStop);
+            CountdownEvents.UnlistenForReset(key, OnCountdownReset);
+            CountdownEvents.UnlistenForRestart(key, OnCountdownRestart);
             base.TearDown();
             
         }

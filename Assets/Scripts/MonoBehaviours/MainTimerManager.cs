@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Timers;
 using System.Diagnostics;
 using TimeSpan = System.TimeSpan;
+using CDEventManager = CGT.Unity.TimerSys.CountdownManager.CountdownEventManager;
 
 namespace CGT.Unity.TimerSys
 { 
@@ -14,6 +15,11 @@ namespace CGT.Unity.TimerSys
 
         public virtual int StopwatchCount { get { return stopwatchManager.TimerCount; } }
         protected StopwatchManager stopwatchManager = new StopwatchManager();
+
+        public virtual CDEventManager CountdownEvents
+        {
+            get { return countdownManager.Events; }
+        }
 
         /// <summary>
         /// Starts the Stopwatch with the passed ID
@@ -88,55 +94,6 @@ namespace CGT.Unity.TimerSys
             stopwatchManager.TickTimers();
         }
 
-        public virtual void ListenForCountdownStart(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.ListenForStart(key, listener);
-        }
-
-        public virtual void UnlistenForCountdownStart(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.UnlistenForStart(key, listener);
-        }
-
-        public virtual void ListenForCountdownEnd(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.ListenForEnd(key, listener);
-        }
-
-        public virtual void UnlistenForCountdownEnd(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.UnlistenForEnd(key, listener);
-        }
-
-        public virtual void ListenForCountdownStop(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.ListenForStop(key, listener);
-        }
-
-        public virtual void UnlistenForCountdownStop(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.UnlistenForStop(key, listener);
-        }
-
-        public virtual void ListenForCountdownReset(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.ListenForReset(key, listener);
-        }
-
-        public virtual void UnlistenForCountdownReset(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.UnlistenForReset(key, listener);
-        }
-
-        public virtual void ListenForCountdownRestart(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.ListenForRestart(key, listener);
-        }
-
-        public virtual void UnlistenForCountdownRestart(TimerKey key, OnTimerEvent listener)
-        {
-            countdownManager.Events.UnlistenForRestart(key, listener);
-        }
 
     }
 }
