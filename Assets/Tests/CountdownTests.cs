@@ -20,6 +20,9 @@ namespace TimerSys.Tests
             timerManager.SetCountdownFor(key, testDuration);
             timerManager.ListenForCountdownStart(key, OnCountdownStart);
             timerManager.ListenForCountdownEnd(key, OnCountdownEnd);
+            timerManager.ListenForCountdownStop(key, OnCountdownStop);
+            timerManager.ListenForCountdownReset(key, OnCountdownReset);
+            timerManager.ListenForCountdownRestart(key, OnCountdownRestart);
             timerManager.StartCountdown(key);
         }
 
@@ -139,11 +142,67 @@ namespace TimerSys.Tests
 
         protected bool countdownFinishTriggered = false;
 
+        [UnityTest]
+        public override IEnumerator TriggersOnStopListeners()
+        {
+            yield return null;
+            timerManager.StopCountdown(key);
+            yield return null;
+            bool success = countdownStopTriggered;
+            Assert.IsTrue(success);
+        }
+
+        protected bool countdownStopTriggered = false;
+
+        protected virtual void OnCountdownStop(TimerEventArgs args)
+        {
+            countdownStopTriggered = true;
+        }
+
+        [UnityTest]
+        public override IEnumerator TriggersOnResetListeners()
+        {
+            yield return null;
+            timerManager.ResetCountdown(key);
+            yield return null;
+            bool success = countdownResetTriggered;
+            Assert.IsTrue(success);
+        }
+
+        protected virtual void OnCountdownReset(TimerEventArgs args)
+        {
+            countdownResetTriggered = true;
+        }
+
+        protected bool countdownResetTriggered = false;
+
+        [UnityTest]
+        public override IEnumerator TriggersOnRestartListeners()
+        {
+            yield return null;
+            timerManager.RestartCountdown(key);
+            yield return null;
+            bool success = countdownRestartTriggered;
+            Assert.IsTrue(success);
+        }
+
+        protected bool countdownRestartTriggered = false;
+
+        protected virtual void OnCountdownRestart(TimerEventArgs args)
+        {
+            countdownRestartTriggered = true;
+        }
+
         public override void TearDown()
         {
-            countdownFinishTriggered = countdownStartTriggered = false;
+            countdownFinishTriggered = countdownStartTriggered =
+                countdownStopTriggered = countdownResetTriggered = 
+                countdownRestartTriggered = false;
             timerManager.UnlistenForCountdownEnd(key, OnCountdownEnd);
             timerManager.UnlistenForCountdownStart(key, OnCountdownStart);
+            timerManager.UnlistenForCountdownStop(key, OnCountdownStop);
+            timerManager.UnlistenForCountdownReset(key, OnCountdownReset);
+            timerManager.UnlistenForCountdownRestart(key, OnCountdownRestart);
             base.TearDown();
             
         }

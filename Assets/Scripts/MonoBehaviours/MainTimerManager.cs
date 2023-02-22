@@ -90,25 +90,53 @@ namespace CGT.Unity.TimerSys
 
         public virtual void ListenForCountdownStart(TimerKey key, OnTimerEvent listener)
         {
-            countdownManager.ListenForStart(key, listener);
+            countdownManager.Events.ListenForStart(key, listener);
         }
 
         public virtual void UnlistenForCountdownStart(TimerKey key, OnTimerEvent listener)
         {
-            countdownManager.UnlistenForStart(key, listener);
+            countdownManager.Events.UnlistenForStart(key, listener);
         }
 
         public virtual void ListenForCountdownEnd(TimerKey key, OnTimerEvent listener)
         {
-            countdownManager.ListenForEnd(key, listener);
+            countdownManager.Events.ListenForEnd(key, listener);
         }
 
         public virtual void UnlistenForCountdownEnd(TimerKey key, OnTimerEvent listener)
         {
-            countdownManager.UnlistenForEnd(key, listener);
+            countdownManager.Events.UnlistenForEnd(key, listener);
         }
 
-        
+        public virtual void ListenForCountdownStop(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.Events.ListenForStop(key, listener);
+        }
+
+        public virtual void UnlistenForCountdownStop(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.Events.UnlistenForStop(key, listener);
+        }
+
+        public virtual void ListenForCountdownReset(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.Events.ListenForReset(key, listener);
+        }
+
+        public virtual void UnlistenForCountdownReset(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.Events.UnlistenForReset(key, listener);
+        }
+
+        public virtual void ListenForCountdownRestart(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.Events.ListenForRestart(key, listener);
+        }
+
+        public virtual void UnlistenForCountdownRestart(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.Events.UnlistenForRestart(key, listener);
+        }
 
     }
 }

@@ -31,29 +31,39 @@ namespace CGT.Unity.TimerSys
 			return inQuestion.LastSetFor;
         }
 
-		public virtual void ListenForStart(TimerKey key, OnTimerEvent listener)
+		public CountdownManager()
         {
-			Countdown inQuestion = GetTimer(key);
-			inQuestion.OnStart += listener;
+			Events = new CountdownEventManager(this);
         }
 
-		public virtual void UnlistenForStart(TimerKey key, OnTimerEvent listener)
-        {
-			Countdown inQuestion = GetTimer(key);
-			inQuestion.OnStart -= listener;
-        }
+		new public CountdownEventManager Events { get; protected set; }
 
-		public virtual void ListenForEnd(TimerKey key, OnTimerEvent listener)
+		public class CountdownEventManager : EventManager<Countdown>
         {
-			Countdown inQuestion = GetTimer(key);
-			inQuestion.OnEnd += listener;
-        }
+			public CountdownEventManager(CountdownManager manager) : base(manager)
+			{
+				this.manager = manager;
+			}
 
-		public virtual void UnlistenForEnd(TimerKey key, OnTimerEvent listener)
-        {
-			Countdown inQuestion = GetTimer(key);
-			inQuestion.OnEnd -= listener;
-		}
+			protected CountdownManager manager; 
+			// Since I need this to be able to treat Countdown objects as Countdowns, which
+			// would then let me access their OnEnd events. Just using them as TTimers wouldn't
+			// let us do that
+
+			public virtual void ListenForEnd(TimerKey key, OnTimerEvent listener)
+            {
+				Countdown inQuestion = manager.GetTimer(key);
+				inQuestion.OnEnd += listener;
+            }
+
+			public virtual void UnlistenForEnd(TimerKey key, OnTimerEvent listener)
+            {
+				Countdown inQuestion = manager.GetTimer(key);
+				inQuestion.OnEnd -= listener;
+            }
+
+			
+        }
 
 	}
 }

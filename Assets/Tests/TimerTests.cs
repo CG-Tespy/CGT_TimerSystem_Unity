@@ -35,6 +35,15 @@ namespace TimerSys.Tests
         [Test]
         public abstract void TriggersOnStartListeners();
 
+        [UnityTest]
+        public abstract IEnumerator TriggersOnStopListeners();
+
+        [UnityTest]
+        public abstract IEnumerator TriggersOnResetListeners();
+
+        [UnityTest]
+        public abstract IEnumerator TriggersOnRestartListeners();
+
         
     }
 }
