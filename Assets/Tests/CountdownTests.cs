@@ -11,119 +11,141 @@ using Debug = UnityEngine.Debug;
 
 namespace TimerSys.Tests
 {
-    public class CountdownTests
+    public class CountdownTests : TimerTests
     {
-        [SetUp]
-        public virtual void SetUp()
+        public override void SetUp()
         {
-            testDuration = TimeSpan.FromMilliseconds(milliseconds);
-            SetUpTestCountdown();
-        }
-        protected double milliseconds = 2000;
-        protected TimeSpan testDuration;
+            base.SetUp();
 
-        protected virtual void SetUpTestCountdown()
-        {
-            testCountdown.SetFor(testDuration);
-            
+            timerManager.SetCountdownFor(key, testDuration);
+            timerManager.ListenForCountdownStart(key, OnCountdownStart);
+            timerManager.ListenForCountdownEnd(key, OnCountdownEnd);
+            timerManager.StartCountdown(key);
         }
 
-        protected ICountdown testCountdown = new Countdown();
 
         [UnityTest]
-        public virtual IEnumerator LastsForIntendedTime()
+        public virtual IEnumerator CountsDownForIntendedTime()
         {
-            testCountdown.StartUp();
-
             // If they end at roughly the same time, then it's a pass
             yield return new WaitForSeconds(testDuration.Seconds);
-            testCountdown.Stop();
-            Assert.IsTrue(CountdownWithinEndMarginOfError);
+            // The countdown should stop itself, so we won't stop it manually here
+
+            Assert.IsTrue(TimeElapsedWithinMarginOfError);
         }
 
-        protected virtual bool CountdownWithinEndMarginOfError
+        protected virtual bool TimeElapsedWithinMarginOfError
         {
             get
             {
-                return System.Math.Abs(testCountdown.CurrentTime.TotalMilliseconds) <=
-                endMarginOfError; 
+                TimeSpan lastSetFor = timerManager.GetCountdownTimeLastSetFor(key);
+                TimeSpan currentTime = timerManager.GetCountdownCurrentTime(key);
+                TimeSpan timeElapsed = lastSetFor - currentTime;
+                bool atLeastEnoughTimePassed = timeElapsed.TotalMilliseconds >= testDuration.TotalMilliseconds;
+                double extraTimePassed = System.Math.Abs(testDuration.TotalMilliseconds - timeElapsed.TotalMilliseconds);
+
+                bool withinMarginOfError = atLeastEnoughTimePassed && extraTimePassed <= endMarginOfError;
+                return withinMarginOfError;
             }
         }
 
-        protected float endMarginOfError = 300; 
-        // Hardware timers aren't always so precise, so we need margins of error like this.
+        protected float endMarginOfError = 300;
+        // Timers aren't always so precise, so we need margins of error like this.
         // In particular, this is for when the countdown's supposed to be over
 
         [UnityTest]
-        public virtual IEnumerator StopsAtRightTime()
+        public virtual IEnumerator ResetsProperly()
         {
-            TimeSpan halfTestDuration = TimeSpan.FromTicks(testDuration.Ticks / 2);
-            testCountdown.StartUp();
-
-            yield return new WaitForSeconds(halfTestDuration.Seconds);
-            testCountdown.Stop();
-
-            double theDiff = testCountdown.TimeLeft.TotalMilliseconds - halfTestDuration.TotalMilliseconds;
-            theDiff = System.Math.Abs(theDiff);
-
-            bool success = theDiff <= endMarginOfError;
-            Assert.IsTrue(success);
-        }
-
-        [UnityTest]
-        public virtual IEnumerator ResetsToRightTime()
-        {
-            testCountdown.StartUp();
-
             yield return new WaitForSeconds(testDuration.Seconds);
 
-            testCountdown.Reset();
+            timerManager.ResetCountdown(key);
             Assert.IsTrue(CountdownAtTestDuration);
         }
 
         protected virtual bool CountdownAtTestDuration
         {
-            get { return testCountdown.CurrentTime.Equals(testDuration); }
-        }
-
-        protected virtual void OnCountdownFinish(TimerEventArgs args)
-        {
-
+            get
+            {
+                TimeSpan currentTime = timerManager.GetCountdownCurrentTime(key);
+                return currentTime.Equals(testDuration);
+            }
         }
 
         [UnityTest]
-        public virtual IEnumerator SetsTimeCorrectlyOnMidRunRestart()
+        public virtual IEnumerator RestartsCorrectlyMidRun()
         {
-            testCountdown.StartUp();
             yield return new WaitForSeconds(testDuration.Seconds / 2);
 
-            testCountdown.Restart();
+            timerManager.RestartCountdown(key);
             Assert.IsTrue(CountdownWithinBeginMarginOfError);
         }
 
         protected virtual bool CountdownWithinBeginMarginOfError
         {
-            get { return testDuration.TotalMilliseconds - 
-                    testCountdown.TimeLeft.TotalMilliseconds 
-                    <= beginMarginOfError; }
+            get
+            {
+                TimeSpan timeLeft = timerManager.GetCountdownCurrentTime(key);
+                return testDuration.TotalMilliseconds - timeLeft.TotalMilliseconds <= beginMarginOfError;
+            }
         }
 
         protected float beginMarginOfError = 30;
 
         [Test]
-        public virtual void SetsTimeCorrectlyOnPreRunRestart()
+        public virtual void RecordsTimeLastSetCorrectly()
         {
-            testCountdown.Restart();
-            Assert.IsTrue(CountdownWithinBeginMarginOfError);
+            TimeSpan fiftyFiveSeconds = new TimeSpan(0, 0, 55);
+            timerManager.SetCountdownFor(key, fiftyFiveSeconds);
+            TimeSpan fromCountdown = timerManager.GetCountdownCurrentTime(key);
+            bool firstSetSuccess = fromCountdown.Equals(fiftyFiveSeconds);
+
+            TimeSpan twoMinutesTwelveSeconds = new TimeSpan(0, 2, 12);
+            timerManager.SetCountdownFor(key, twoMinutesTwelveSeconds);
+            fromCountdown = timerManager.GetCountdownCurrentTime(key);
+            bool secondSetSuccess = fromCountdown.Equals(twoMinutesTwelveSeconds);
+
+            bool everythingGood = firstSetSuccess && secondSetSuccess;
+            Assert.IsTrue(everythingGood);
+
         }
 
-        [TearDown]
-        public virtual void TearDown()
+        [Test]
+        public override void TriggersOnStartListeners()
         {
-            testCountdown.Stop();
-            testCountdown.Reset();
-            testCountdown.OnFinish -= OnCountdownFinish;
+            bool success = countdownStartTriggered;
+            Assert.IsTrue(success);
         }
 
+        protected virtual void OnCountdownStart(TimerEventArgs args)
+        {
+            countdownStartTriggered = true;
+        }
+
+        bool countdownStartTriggered = false;
+
+        [UnityTest]
+        public virtual  IEnumerator TriggersOnEndListeners()
+        {
+            yield return new WaitForSeconds(testDuration.Seconds + 0.1f);
+            bool success = countdownFinishTriggered;
+            Assert.IsTrue(success);
+
+        }
+
+        protected virtual void OnCountdownEnd(TimerEventArgs args)
+        {
+            countdownFinishTriggered = true;
+        }
+
+        protected bool countdownFinishTriggered = false;
+
+        public override void TearDown()
+        {
+            countdownFinishTriggered = countdownStartTriggered = false;
+            timerManager.UnlistenForCountdownEnd(key, OnCountdownEnd);
+            timerManager.UnlistenForCountdownStart(key, OnCountdownStart);
+            base.TearDown();
+            
+        }
     }
 }

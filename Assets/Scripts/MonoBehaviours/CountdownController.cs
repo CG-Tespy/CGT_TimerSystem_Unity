@@ -7,7 +7,7 @@ namespace CGT.Unity.TimerSys
 {
 	public class CountdownController : MonoBehaviour, ICountdown
 	{
-        event OnTimerEvent ICountdown.OnFinish
+        event OnTimerEvent ICountdown.OnEnd
         {
             add
             {

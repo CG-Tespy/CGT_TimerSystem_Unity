@@ -1,22 +1,21 @@
-﻿using NUnit.Framework;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.TestTools;
-using CGT.Unity.TimerSys;
+using NUnit.Framework;
 using System.Collections;
 using TimeSpan = System.TimeSpan;
+using CGT.Unity.TimerSys;
 
 namespace TimerSys.Tests
 {
-    public class TimerManagerTests
+    public abstract class TimerTests
     {
+
         [SetUp]
         public virtual void SetUp()
         {
             GameObject newGo = new GameObject();
             timerManager = newGo.AddComponent<MainTimerManager>();
             testDuration = TimeSpan.FromMilliseconds(milliseconds);
-            timerManager.SetCountdownFor(key, testDuration);
-            timerManager.StartCountdown(key);
         }
 
         protected MainTimerManager timerManager;
@@ -26,13 +25,16 @@ namespace TimerSys.Tests
         protected double milliseconds = 2000.0;
         protected TimeSpan testDuration;
 
-        
-
         [TearDown]
         public virtual void TearDown()
         {
             timerManager.StopCountdown(key);
             GameObject.Destroy(timerManager.gameObject);
         }
+
+        [Test]
+        public abstract void TriggersOnStartListeners();
+
+        
     }
 }

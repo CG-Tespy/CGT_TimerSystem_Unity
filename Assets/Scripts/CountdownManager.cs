@@ -25,17 +25,35 @@ namespace CGT.Unity.TimerSys
 			return inQuestion.TimeLeft;
         }
 
-		public virtual void ListenForCountdownFinish(TimerKey key, OnTimerEvent listener)
-        {
-			Countdown countdown = GetTimer(key);
-			countdown.OnFinish += listener;
-        }
-
 		public virtual TimeSpan GetCountdownTimeLastSetFor(TimerKey key)
         {
 			Countdown inQuestion = GetTimer(key);
 			return inQuestion.LastSetFor;
         }
+
+		public virtual void ListenForStart(TimerKey key, OnTimerEvent listener)
+        {
+			Countdown inQuestion = GetTimer(key);
+			inQuestion.OnStart += listener;
+        }
+
+		public virtual void UnlistenForStart(TimerKey key, OnTimerEvent listener)
+        {
+			Countdown inQuestion = GetTimer(key);
+			inQuestion.OnStart -= listener;
+        }
+
+		public virtual void ListenForEnd(TimerKey key, OnTimerEvent listener)
+        {
+			Countdown inQuestion = GetTimer(key);
+			inQuestion.OnEnd += listener;
+        }
+
+		public virtual void UnlistenForEnd(TimerKey key, OnTimerEvent listener)
+        {
+			Countdown inQuestion = GetTimer(key);
+			inQuestion.OnEnd -= listener;
+		}
 
 	}
 }

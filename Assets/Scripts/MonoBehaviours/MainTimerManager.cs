@@ -87,5 +87,28 @@ namespace CGT.Unity.TimerSys
             countdownManager.TickTimers();
             stopwatchManager.TickTimers();
         }
+
+        public virtual void ListenForCountdownStart(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.ListenForStart(key, listener);
+        }
+
+        public virtual void UnlistenForCountdownStart(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.UnlistenForStart(key, listener);
+        }
+
+        public virtual void ListenForCountdownEnd(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.ListenForEnd(key, listener);
+        }
+
+        public virtual void UnlistenForCountdownEnd(TimerKey key, OnTimerEvent listener)
+        {
+            countdownManager.UnlistenForEnd(key, listener);
+        }
+
+        
+
     }
 }

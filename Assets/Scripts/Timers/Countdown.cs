@@ -10,7 +10,7 @@ namespace CGT.Unity.TimerSys
     {
         public TimeSpan TimeLeft { get { return CurrentTime; } }
 
-        public event OnTimerEvent OnFinish = delegate { };
+        public event OnTimerEvent OnEnd = delegate { };
 
         public TimeSpan LastSetFor { get { return TimeSpan.FromHours(timeToResetTo); } }
 
@@ -29,7 +29,7 @@ namespace CGT.Unity.TimerSys
                 IsRunning = false;
                 // Since Countdowns should stop themselves when they hit zero, not keep
                 // going further into the negatives
-                AlertListenersFor(OnFinish);
+                AlertListenersFor(OnEnd);
             }
         }
 
