@@ -1,11 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace CGT.Unity.TimerSys
+﻿namespace CGT.Unity.TimerSys
 {
 	// Set up this way for more informative error messages on validation
-	public class TimerHandlerValidator
+	public class TimerKeyValidator
 	{
 		public void ValidateForStarting(TimerKey key)
         {
@@ -47,5 +43,14 @@ namespace CGT.Unity.TimerSys
 
 		protected static string forInvalidTimerRestarting = "Cannot restart a timer with an invalid key.";
 
+		public virtual void ValidateForGettingCurrentTime(TimerKey key)
+        {
+			if (key == null || !key.IsValid)
+            {
+				throw new System.ArgumentException(forInvalidTimeGetting);
+			}
+        }
+
+		protected static string forInvalidTimeGetting = "Cannot get the current time of a timer with an invalid key.";
 	}
 }

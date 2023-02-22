@@ -88,12 +88,26 @@ namespace CGT.Unity.TimerSys
             return countdownManager.GetCountdownTimeLastSetFor(key);
         }
 
+        public virtual TimeSpan GetStopwatchCurrentTime(TimerKey key)
+        {
+            return stopwatchManager.GetTimerCurrentTime(key);
+        }
+
+        public virtual void ResetStopwatch(TimerKey key)
+        {
+            stopwatchManager.ResetTimer(key);
+        }
+
+        public virtual void RestartStopwatch(TimerKey key)
+        {
+            stopwatchManager.RestartTimer(key);
+        }
+
         protected virtual void Update()
         {
             countdownManager.TickTimers();
             stopwatchManager.TickTimers();
         }
-
 
     }
 }

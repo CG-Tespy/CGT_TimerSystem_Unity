@@ -10,53 +10,41 @@ using Math = System.Math;
 
 namespace TimerSys.Tests
 {
-    public class StopwatchTests
+    public class StopwatchTests : TimerTests
     {
         [SetUp]
-        public virtual void SetUp()
+        public override void SetUp()
         {
-            testDuration = TimeSpan.FromMilliseconds(milliseconds);
-        }
-        protected double milliseconds = 2000;
-        protected TimeSpan testDuration;
-
-        protected Stopwatch testStopwatch = new Stopwatch();
-
-        [UnityTest]
-        public IEnumerator StopsAtRightTime()
-        {
-            testStopwatch.StartUp();
-
-            // If they end at roughly the same time, then it's a pass
-            yield return new WaitForSeconds(testDuration.Seconds);
-            testStopwatch.Stop();
-            Assert.IsTrue(StopwatchWithinEndMarginOfError);
+            base.SetUp();
+            timerManager.StartStopwatch(key);
         }
 
         protected virtual bool StopwatchWithinEndMarginOfError
         {
-            get {  return Math.Abs(testDuration.TotalMilliseconds - 
-                testStopwatch.CurrentTime.TotalMilliseconds) <=
+            get 
+            {
+                return Math.Abs(testDuration.TotalMilliseconds - 
+                CurrentTime.TotalMilliseconds) <=
                 marginOfError;
             }
         }
+
+        protected virtual TimeSpan CurrentTime { get { return timerManager.GetStopwatchCurrentTime(key); } }
 
         protected float marginOfError = 15; // milliseconds
 
         [UnityTest]
         public virtual IEnumerator ResetsToRightTime()
         {
-            testStopwatch.StartUp();
-
             yield return new WaitForSeconds(testDuration.Seconds / 1.25f);
 
-            testStopwatch.Reset();
+            timerManager.ResetStopwatch(key);
             Assert.IsTrue(AtStartDuration);
         }
 
         protected virtual bool AtStartDuration
         {
-            get { return testStopwatch.CurrentTime.Equals(startDuration); }
+            get { return CurrentTime.Equals(startDuration); }
         }
 
         protected TimeSpan startDuration;
@@ -64,38 +52,62 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator RestartStartCountingBeforeregularStart()
         {
-            testStopwatch.Restart();
+            timerManager.RestartStopwatch(key);
             yield return new WaitForSeconds(testDuration.Seconds / 2);
             Assert.IsTrue(HasNonZeroTimeMeasured);
         }
 
         protected virtual bool HasNonZeroTimeMeasured
         {
-            get { return testStopwatch.CurrentTime.TotalMilliseconds > startDuration.TotalMilliseconds; }
+            get { return CurrentTime.TotalMilliseconds > startDuration.TotalMilliseconds; }
         }
 
         [UnityTest]
         public virtual IEnumerator RestartResetsTimeAfterRegularStart()
         {
-            testStopwatch.StartUp();
             yield return new WaitForSeconds(testDuration.Seconds);
 
-            testStopwatch.Restart();
+            timerManager.RestartStopwatch(key);
             Assert.IsTrue(WithinStartDurationMarginOfError);
         }
 
         protected virtual bool WithinStartDurationMarginOfError
         {
-            get { return testStopwatch.CurrentTime.TotalMilliseconds <= startMarginOfError; }
+            get { return CurrentTime.TotalMilliseconds <= startMarginOfError; }
         }
 
         protected float startMarginOfError = 30;
 
         [TearDown]
-        public virtual void TearDown()
+        public override void TearDown()
         {
-            testStopwatch.Stop();
-            testStopwatch.Reset();
+            timerManager.StopStopwatch(key);
+            timerManager.ResetStopwatch(key);
+            base.TearDown();
+        }
+
+        [Test]
+        public override void TriggersOnStartListeners()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        [UnityTest]
+        public override IEnumerator TriggersOnStopListeners()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        [UnityTest]
+        public override IEnumerator TriggersOnResetListeners()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        [UnityTest]
+        public override IEnumerator TriggersOnRestartListeners()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

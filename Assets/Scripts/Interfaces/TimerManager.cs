@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using TimeSpan = System.TimeSpan;
 
 namespace CGT.Unity.TimerSys
 {
@@ -24,7 +24,7 @@ namespace CGT.Unity.TimerSys
 			inQuestion.StartUp();
         }
 
-		protected TimerHandlerValidator validator = new TimerHandlerValidator();
+		protected TimerKeyValidator validator = new TimerKeyValidator();
 
 		protected virtual TTimer GetTimer(TimerKey key)
         {
@@ -60,6 +60,13 @@ namespace CGT.Unity.TimerSys
 			validator.ValidateForRestarting(key);
 			TTimer inQuestion = GetTimer(key);
 			inQuestion.Restart();
+        }
+
+		public virtual TimeSpan GetTimerCurrentTime(TimerKey key)
+        {
+			validator.ValidateForGettingCurrentTime(key);
+			TTimer inQuestion = GetTimer(key);
+			return inQuestion.CurrentTime;
         }
 
 		public virtual void TickTimers()
