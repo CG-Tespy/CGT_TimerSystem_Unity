@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using System.Timers;
-using System.Diagnostics;
+﻿using UnityEngine;
 using TimeSpan = System.TimeSpan;
-using CDEventManager = CGT.Unity.TimerSys.CountdownManager.CountdownEventManager;
-using SWEventManager = CGT.Unity.TimerSys.StopwatchManager.EventManager<CGT.Unity.TimerSys.Stopwatch>;
+using CountdownEvents = CGT.Unity.TimerSys.CountdownManager.CountdownEvents;
+using TimerEvents = CGT.Unity.TimerSys.StopwatchManager.TimerEvents;
 
 namespace CGT.Unity.TimerSys
 { 
@@ -17,15 +14,9 @@ namespace CGT.Unity.TimerSys
         public virtual int StopwatchCount { get { return stopwatchManager.TimerCount; } }
         protected StopwatchManager stopwatchManager = new StopwatchManager();
 
-        public virtual CDEventManager CDEvents
-        {
-            get { return countdownManager.Events; }
-        }
+        public virtual CountdownEvents CDEvents { get { return countdownManager.Events; } }
 
-        public virtual SWEventManager SWEvents
-        {
-            get { return stopwatchManager.Events; }
-        }
+        public virtual TimerEvents SWEvents { get { return stopwatchManager.Events; } }
 
         /// <summary>
         /// Starts the Stopwatch with the passed ID

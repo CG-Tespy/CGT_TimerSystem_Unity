@@ -33,20 +33,20 @@ namespace CGT.Unity.TimerSys
 
 		public CountdownManager()
         {
-			Events = new CountdownEventManager(this);
+			Events = new CountdownEvents(this);
         }
 
-		new public CountdownEventManager Events { get; protected set; }
+		new public CountdownEvents Events { get; protected set; }
 
-		public class CountdownEventManager : EventManager<Countdown>
+		public class CountdownEvents : TimerEvents
         {
-			public CountdownEventManager(CountdownManager manager) : base(manager)
+			public CountdownEvents(CountdownManager manager) : base(manager)
 			{
 				this.manager = manager;
 			}
 
 			protected CountdownManager manager; 
-			// Since I need this to be able to treat Countdown objects as Countdowns, which
+			// ^Since we need this to be able to treat Countdown objects as Countdowns, which
 			// would then let me access their OnEnd events. Just using them as TTimers wouldn't
 			// let us do that
 
@@ -62,7 +62,6 @@ namespace CGT.Unity.TimerSys
 				inQuestion.OnEnd -= listener;
             }
 
-			
         }
 
 	}

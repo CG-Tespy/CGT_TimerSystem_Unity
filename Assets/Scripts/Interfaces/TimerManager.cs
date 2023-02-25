@@ -79,65 +79,65 @@ namespace CGT.Unity.TimerSys
 
 		public TimerManager()
         {
-			Events = new EventManager<TTimer>(this);
+			Events = new TimerEvents(this);
         }
 
-		public EventManager<TTimer> Events { get; protected set; }
+		public TimerEvents Events { get; protected set; }
 		
-		public class EventManager<TObservableTimer> where TObservableTimer : IObservableTimer, new()
+		public partial class TimerEvents
 		{
-			public EventManager(TimerManager<TObservableTimer> manager)
+			public TimerEvents(TimerManager<TTimer> manager)
             {
 				this.timerManager = manager;
             }
 
-			protected TimerManager<TObservableTimer> timerManager;
+			protected TimerManager<TTimer> timerManager;
 
 			public virtual void ListenForStart(TimerKey key, OnTimerEvent listener)
             {
-				TObservableTimer inQuestion = timerManager.GetTimer(key);
+				TTimer inQuestion = timerManager.GetTimer(key);
 				inQuestion.OnStart += listener;
             }
 
 			public virtual void UnlistenForStart(TimerKey key, OnTimerEvent listener)
             {
-				TObservableTimer inQuestion = timerManager.GetTimer(key);
+				TTimer inQuestion = timerManager.GetTimer(key);
 				inQuestion.OnStart -= listener;
 			}
 
 			public virtual void ListenForStop(TimerKey key, OnTimerEvent listener)
             {
-				TObservableTimer inQuestion = timerManager.GetTimer(key);
+				TTimer inQuestion = timerManager.GetTimer(key);
 				inQuestion.OnStop += listener;
 			}
 
 			public virtual void UnlistenForStop(TimerKey key, OnTimerEvent listener)
 			{
-				TObservableTimer inQuestion = timerManager.GetTimer(key);
+				TTimer inQuestion = timerManager.GetTimer(key);
 				inQuestion.OnStop -= listener;
 			}
 
 			public virtual void ListenForReset(TimerKey key, OnTimerEvent listener)
             {
-				TObservableTimer inQuestion = timerManager.GetTimer(key);
+				TTimer inQuestion = timerManager.GetTimer(key);
 				inQuestion.OnReset += listener;
 			}
 
 			public virtual void UnlistenForReset(TimerKey key, OnTimerEvent listener)
 			{
-				TObservableTimer inQuestion = timerManager.GetTimer(key);
+				TTimer inQuestion = timerManager.GetTimer(key);
 				inQuestion.OnReset -= listener;
 			}
 
 			public virtual void ListenForRestart(TimerKey key, OnTimerEvent listener)
 			{
-				TObservableTimer inQuestion = timerManager.GetTimer(key);
+				TTimer inQuestion = timerManager.GetTimer(key);
 				inQuestion.OnRestart += listener;
 			}
 
 			public virtual void UnlistenForRestart(TimerKey key, OnTimerEvent listener)
 			{
-				TObservableTimer inQuestion = timerManager.GetTimer(key);
+				TTimer inQuestion = timerManager.GetTimer(key);
 				inQuestion.OnRestart -= listener;
 			}
 		}

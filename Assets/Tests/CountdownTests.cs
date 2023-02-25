@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Timers;
 using TimeSpan = System.TimeSpan;
 using Debug = UnityEngine.Debug;
-using CDEventManager = CGT.Unity.TimerSys.CountdownManager.CountdownEventManager;
+using CDEventManager = CGT.Unity.TimerSys.CountdownManager.CountdownEvents;
 
 namespace TimerSys.Tests
 {
