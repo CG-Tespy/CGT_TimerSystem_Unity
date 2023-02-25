@@ -23,12 +23,13 @@ namespace CGT.Unity.TimerSys
         {
             currentTime -= hoursElapsed;
 
-            bool HitZero = currentTime <= 0;
-            if (HitZero)
+            bool FinishedCountingDown = currentTime <= 0;
+            if (FinishedCountingDown)
             {
                 IsRunning = false;
                 // Since Countdowns should stop themselves when they hit zero, not keep
                 // going further into the negatives
+                currentTime = 0; // So the CurrentTime tick-count doesn't go into the negatives
                 AlertListenersFor(OnEnd);
             }
         }

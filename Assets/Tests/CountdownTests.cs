@@ -201,25 +201,38 @@ namespace TimerSys.Tests
 
             // We're expecting the countdown to work faster than normal, 
             // meaning it should finish its job sooner than usual
-            float waitTimeNeeded = (testDuration.Seconds / raisedTimeScale) * raisedTSMarginOfError;
-            yield return new WaitForSeconds(waitTimeNeeded);
+            float lessThanNormal = (testDuration.Seconds / raisedTimeScale);
+            lessThanNormal *= alteredTSMarginOfError;
+            yield return new WaitForSeconds(lessThanNormal);
 
             bool success = countdownFinishTriggered;
             Assert.IsTrue(success);
         }
 
         protected float raisedTimeScale = 1.50f;
-        protected float raisedTSMarginOfError = 1.03f; 
+        protected float alteredTSMarginOfError = 1.01f; 
         // So we wait ever so slightly more than the expected time, what with how imprecise
         // timers can be
 
 
         [UnityTest]
-        [Ignore("")]
         public override IEnumerator TicksRightBasedOnReducedTimeScale()
         {
-            throw new System.NotImplementedException();
+            timerSystem.ResetCountdown(key);
+            timerSystem.SetCountdownTimeScale(key, reducedTimeScale);
+            timerSystem.StartCountdown(key);
+
+            // We're expecting the countdown to work _slower_ than normal, 
+            // meaning it should finish its job _later_ than usual
+            float moreThanNormal = (testDuration.Seconds / reducedTimeScale);
+            moreThanNormal *= alteredTSMarginOfError;
+            yield return new WaitForSeconds(moreThanNormal);
+
+            bool success = countdownFinishTriggered;
+            Assert.IsTrue(success);
         }
+
+        protected float reducedTimeScale = 0.64f;
 
         [TearDown]
         public override void TearDown()
