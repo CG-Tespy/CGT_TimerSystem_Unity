@@ -74,7 +74,7 @@ namespace CGT.Unity.TimerSys
 
         protected virtual void Awake()
         {
-            TimerManager = FindObjectOfType<MainTimerManager>();
+            TimerManager = FindObjectOfType<TimerSystem>();
             timerKey = new TimerKey(this);
         }
 
@@ -99,7 +99,7 @@ namespace CGT.Unity.TimerSys
             }
         }
 
-        protected static MainTimerManager TimerManager;
+        protected static TimerSystem TimerManager;
 
         public void StartUp()
         {

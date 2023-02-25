@@ -14,11 +14,11 @@ namespace TimerSys.Tests
         public virtual void SetUp()
         {
             GameObject newGo = new GameObject();
-            timerManager = newGo.AddComponent<MainTimerManager>();
+            timerManager = newGo.AddComponent<TimerSystem>();
             testDuration = TimeSpan.FromMilliseconds(milliseconds);
         }
 
-        protected MainTimerManager timerManager;
+        protected TimerSystem timerManager;
 
         protected TimerKey key = new TimerKey(1);
 

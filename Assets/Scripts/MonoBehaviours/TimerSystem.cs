@@ -8,7 +8,7 @@ using CDEventManager = CGT.Unity.TimerSys.CountdownManager.CountdownEventManager
 namespace CGT.Unity.TimerSys
 { 
     [AddComponentMenu("CGT TimerSys/Timer Manager")]
-    public class MainTimerManager : MonoBehaviour
+    public class TimerSystem : MonoBehaviour
     {
         public virtual int CountdownCount { get { return countdownManager.TimerCount; } }
         protected CountdownManager countdownManager = new CountdownManager();
