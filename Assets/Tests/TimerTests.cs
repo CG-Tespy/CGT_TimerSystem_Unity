@@ -43,6 +43,13 @@ namespace TimerSys.Tests
 
         [UnityTest]
         public abstract IEnumerator TriggersOnRestartListeners();
-        
+
+        [UnityTest]
+        public abstract IEnumerator TicksRightBasedOnRaisedTimeScale();
+
+        [UnityTest]
+        public abstract IEnumerator TicksRightBasedOnReducedTimeScale();
+
+        protected abstract TimeSpan CurrentTime { get; }
     }
 }

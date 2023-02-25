@@ -82,9 +82,9 @@ namespace CGT.Unity.TimerSys
 			Events = new TimerEvents(this);
         }
 
-		public TimerEvents Events { get; protected set; }
+		public virtual TimerEvents Events { get; protected set; }
 		
-		public partial class TimerEvents
+		public class TimerEvents
 		{
 			public TimerEvents(TimerManager<TTimer> manager)
             {
@@ -141,5 +141,11 @@ namespace CGT.Unity.TimerSys
 				inQuestion.OnRestart -= listener;
 			}
 		}
+	
+		public virtual void SetTimerTimeScale(TimerKey key, float newTimeScale)
+        {
+			TTimer inQuestion = GetTimer(key);
+			inQuestion.TimeScale = newTimeScale;
+        }
 	}
 }

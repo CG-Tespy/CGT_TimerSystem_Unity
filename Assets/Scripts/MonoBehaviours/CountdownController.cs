@@ -99,6 +99,19 @@ namespace CGT.Unity.TimerSys
             }
         }
 
+        public float TimeScale
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         protected static TimerSystem TimerManager;
 
         public void StartUp()

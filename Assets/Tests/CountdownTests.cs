@@ -9,6 +9,7 @@ using System.Timers;
 using TimeSpan = System.TimeSpan;
 using Debug = UnityEngine.Debug;
 using CDEventManager = CGT.Unity.TimerSys.CountdownManager.CountdownEvents;
+using BuiltInMath = System.Math;
 
 namespace TimerSys.Tests
 {
@@ -46,8 +47,7 @@ namespace TimerSys.Tests
             get
             {
                 TimeSpan lastSetFor = timerSystem.GetCountdownTimeLastSetFor(key);
-                TimeSpan currentTime = timerSystem.GetCountdownCurrentTime(key);
-                TimeSpan timeElapsed = lastSetFor - currentTime;
+                TimeSpan timeElapsed = lastSetFor - CurrentTime;
                 bool atLeastEnoughTimePassed = timeElapsed.TotalMilliseconds >= testDuration.TotalMilliseconds;
                 double extraTimePassed = System.Math.Abs(testDuration.TotalMilliseconds - timeElapsed.TotalMilliseconds);
 
@@ -55,6 +55,8 @@ namespace TimerSys.Tests
                 return withinMarginOfError;
             }
         }
+
+        protected override TimeSpan CurrentTime { get { return timerSystem.GetCountdownCurrentTime(key); } }
 
         protected float endMarginOfError = 300;
         // Timers aren't always so precise, so we need margins of error like this.
@@ -69,14 +71,7 @@ namespace TimerSys.Tests
             Assert.IsTrue(CountdownAtTestDuration);
         }
 
-        protected virtual bool CountdownAtTestDuration
-        {
-            get
-            {
-                TimeSpan currentTime = timerSystem.GetCountdownCurrentTime(key);
-                return currentTime.Equals(testDuration);
-            }
-        }
+        protected virtual bool CountdownAtTestDuration { get { return CurrentTime.Equals(testDuration); } }
 
         [UnityTest]
         public virtual IEnumerator RestartsCorrectlyMidRun()
@@ -91,7 +86,7 @@ namespace TimerSys.Tests
         {
             get
             {
-                TimeSpan timeLeft = timerSystem.GetCountdownCurrentTime(key);
+                TimeSpan timeLeft = CurrentTime;
                 return testDuration.TotalMilliseconds - timeLeft.TotalMilliseconds <= beginMarginOfError;
             }
         }
@@ -103,12 +98,12 @@ namespace TimerSys.Tests
         {
             TimeSpan fiftyFiveSeconds = new TimeSpan(0, 0, 55);
             timerSystem.SetCountdownFor(key, fiftyFiveSeconds);
-            TimeSpan fromCountdown = timerSystem.GetCountdownCurrentTime(key);
+            TimeSpan fromCountdown = CurrentTime;
             bool firstSetSuccess = fromCountdown.Equals(fiftyFiveSeconds);
 
             TimeSpan twoMinutesTwelveSeconds = new TimeSpan(0, 2, 12);
             timerSystem.SetCountdownFor(key, twoMinutesTwelveSeconds);
-            fromCountdown = timerSystem.GetCountdownCurrentTime(key);
+            fromCountdown = CurrentTime;
             bool secondSetSuccess = fromCountdown.Equals(twoMinutesTwelveSeconds);
 
             bool everythingGood = firstSetSuccess && secondSetSuccess;
@@ -197,6 +192,36 @@ namespace TimerSys.Tests
             countdownRestartTriggered = true;
         }
 
+        [UnityTest]
+        public override IEnumerator TicksRightBasedOnRaisedTimeScale()
+        {
+            timerSystem.ResetCountdown(key);
+            timerSystem.SetCountdownTimeScale(key, raisedTimeScale);
+            timerSystem.StartCountdown(key);
+
+            // We're expecting the countdown to work faster than normal, 
+            // meaning it should finish its job sooner than usual
+            float waitTimeNeeded = (testDuration.Seconds / raisedTimeScale) * raisedTSMarginOfError;
+            yield return new WaitForSeconds(waitTimeNeeded);
+
+            bool success = countdownFinishTriggered;
+            Assert.IsTrue(success);
+        }
+
+        protected float raisedTimeScale = 1.50f;
+        protected float raisedTSMarginOfError = 1.03f; 
+        // So we wait ever so slightly more than the expected time, what with how imprecise
+        // timers can be
+
+
+        [UnityTest]
+        [Ignore("")]
+        public override IEnumerator TicksRightBasedOnReducedTimeScale()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        [TearDown]
         public override void TearDown()
         {
             countdownFinishTriggered = countdownStartTriggered =

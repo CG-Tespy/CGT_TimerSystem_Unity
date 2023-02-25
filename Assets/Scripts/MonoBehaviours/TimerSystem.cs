@@ -106,5 +106,15 @@ namespace CGT.Unity.TimerSys
             stopwatchManager.TickTimers();
         }
 
+        public virtual void SetCountdownTimeScale(TimerKey key, float newTimeScale)
+        {
+            countdownManager.SetTimerTimeScale(key, newTimeScale);
+        }
+
+        public virtual void SetStopwatchTimeScale(TimerKey key, float newTimeScale)
+        {
+            stopwatchManager.SetTimerTimeScale(key, newTimeScale);
+        }
+
     }
 }

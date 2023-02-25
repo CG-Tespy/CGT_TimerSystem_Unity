@@ -40,7 +40,7 @@ namespace TimerSys.Tests
             }
         }
 
-        protected virtual TimeSpan CurrentTime { get { return timerSystem.GetStopwatchCurrentTime(key); } }
+        protected override TimeSpan CurrentTime { get { return timerSystem.GetStopwatchCurrentTime(key); } }
 
         protected float marginOfError = 15; // milliseconds
 
@@ -168,6 +168,20 @@ namespace TimerSys.Tests
             stopwatchEvents.UnlistenForStop(key, OnStopwatchStop);
             stopwatchEvents.UnlistenForReset(key, OnStopwatchReset);
             stopwatchEvents.UnlistenForRestart(key, OnStopwatchRestart);
+        }
+
+        [UnityTest]
+        [Ignore("")]
+        public override IEnumerator TicksRightBasedOnRaisedTimeScale()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        [UnityTest]
+        [Ignore("")]
+        public override IEnumerator TicksRightBasedOnReducedTimeScale()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
