@@ -18,17 +18,17 @@ namespace TimerSys.Tests
         {
             base.SetUp();
 
-            timerManager.SetCountdownFor(key, testDuration);
+            timerSystem.SetCountdownFor(key, testDuration);
 
             CountdownEvents.ListenForStart(key, OnCountdownStart);
             CountdownEvents.ListenForEnd(key, OnCountdownEnd);
             CountdownEvents.ListenForStop(key, OnCountdownStop);
             CountdownEvents.ListenForReset(key, OnCountdownReset);
             CountdownEvents.ListenForRestart(key, OnCountdownRestart);
-            timerManager.StartCountdown(key);
+            timerSystem.StartCountdown(key);
         }
 
-        protected virtual CDEventManager CountdownEvents { get { return timerManager.CountdownEvents; } }
+        protected virtual CDEventManager CountdownEvents { get { return timerSystem.CDEvents; } }
 
 
         [UnityTest]
@@ -45,8 +45,8 @@ namespace TimerSys.Tests
         {
             get
             {
-                TimeSpan lastSetFor = timerManager.GetCountdownTimeLastSetFor(key);
-                TimeSpan currentTime = timerManager.GetCountdownCurrentTime(key);
+                TimeSpan lastSetFor = timerSystem.GetCountdownTimeLastSetFor(key);
+                TimeSpan currentTime = timerSystem.GetCountdownCurrentTime(key);
                 TimeSpan timeElapsed = lastSetFor - currentTime;
                 bool atLeastEnoughTimePassed = timeElapsed.TotalMilliseconds >= testDuration.TotalMilliseconds;
                 double extraTimePassed = System.Math.Abs(testDuration.TotalMilliseconds - timeElapsed.TotalMilliseconds);
@@ -65,7 +65,7 @@ namespace TimerSys.Tests
         {
             yield return new WaitForSeconds(testDuration.Seconds);
 
-            timerManager.ResetCountdown(key);
+            timerSystem.ResetCountdown(key);
             Assert.IsTrue(CountdownAtTestDuration);
         }
 
@@ -73,7 +73,7 @@ namespace TimerSys.Tests
         {
             get
             {
-                TimeSpan currentTime = timerManager.GetCountdownCurrentTime(key);
+                TimeSpan currentTime = timerSystem.GetCountdownCurrentTime(key);
                 return currentTime.Equals(testDuration);
             }
         }
@@ -83,7 +83,7 @@ namespace TimerSys.Tests
         {
             yield return new WaitForSeconds(testDuration.Seconds / 2);
 
-            timerManager.RestartCountdown(key);
+            timerSystem.RestartCountdown(key);
             Assert.IsTrue(CountdownWithinBeginMarginOfError);
         }
 
@@ -91,7 +91,7 @@ namespace TimerSys.Tests
         {
             get
             {
-                TimeSpan timeLeft = timerManager.GetCountdownCurrentTime(key);
+                TimeSpan timeLeft = timerSystem.GetCountdownCurrentTime(key);
                 return testDuration.TotalMilliseconds - timeLeft.TotalMilliseconds <= beginMarginOfError;
             }
         }
@@ -102,13 +102,13 @@ namespace TimerSys.Tests
         public virtual void RecordsTimeLastSetCorrectly()
         {
             TimeSpan fiftyFiveSeconds = new TimeSpan(0, 0, 55);
-            timerManager.SetCountdownFor(key, fiftyFiveSeconds);
-            TimeSpan fromCountdown = timerManager.GetCountdownCurrentTime(key);
+            timerSystem.SetCountdownFor(key, fiftyFiveSeconds);
+            TimeSpan fromCountdown = timerSystem.GetCountdownCurrentTime(key);
             bool firstSetSuccess = fromCountdown.Equals(fiftyFiveSeconds);
 
             TimeSpan twoMinutesTwelveSeconds = new TimeSpan(0, 2, 12);
-            timerManager.SetCountdownFor(key, twoMinutesTwelveSeconds);
-            fromCountdown = timerManager.GetCountdownCurrentTime(key);
+            timerSystem.SetCountdownFor(key, twoMinutesTwelveSeconds);
+            fromCountdown = timerSystem.GetCountdownCurrentTime(key);
             bool secondSetSuccess = fromCountdown.Equals(twoMinutesTwelveSeconds);
 
             bool everythingGood = firstSetSuccess && secondSetSuccess;
@@ -150,7 +150,7 @@ namespace TimerSys.Tests
         public override IEnumerator TriggersOnStopListeners()
         {
             yield return null;
-            timerManager.StopCountdown(key);
+            timerSystem.StopCountdown(key);
             yield return null;
             bool success = countdownStopTriggered;
             Assert.IsTrue(success);
@@ -167,7 +167,7 @@ namespace TimerSys.Tests
         public override IEnumerator TriggersOnResetListeners()
         {
             yield return null;
-            timerManager.ResetCountdown(key);
+            timerSystem.ResetCountdown(key);
             yield return null;
             bool success = countdownResetTriggered;
             Assert.IsTrue(success);
@@ -184,7 +184,7 @@ namespace TimerSys.Tests
         public override IEnumerator TriggersOnRestartListeners()
         {
             yield return null;
-            timerManager.RestartCountdown(key);
+            timerSystem.RestartCountdown(key);
             yield return null;
             bool success = countdownRestartTriggered;
             Assert.IsTrue(success);

@@ -16,7 +16,18 @@ namespace TimerSys.Tests
         public override void SetUp()
         {
             base.SetUp();
-            timerManager.StartStopwatch(key);
+
+            ListenForEvents();
+            timerSystem.StartStopwatch(key);
+        }
+
+        protected virtual void ListenForEvents()
+        {
+            var stopwatchEvents = timerSystem.SWEvents;
+            stopwatchEvents.ListenForStart(key, OnStopwatchStart);
+            stopwatchEvents.ListenForStop(key, OnStopwatchStop);
+            stopwatchEvents.ListenForReset(key, OnStopwatchReset);
+            stopwatchEvents.ListenForRestart(key, OnStopwatchRestart);
         }
 
         protected virtual bool StopwatchWithinEndMarginOfError
@@ -29,7 +40,7 @@ namespace TimerSys.Tests
             }
         }
 
-        protected virtual TimeSpan CurrentTime { get { return timerManager.GetStopwatchCurrentTime(key); } }
+        protected virtual TimeSpan CurrentTime { get { return timerSystem.GetStopwatchCurrentTime(key); } }
 
         protected float marginOfError = 15; // milliseconds
 
@@ -38,7 +49,7 @@ namespace TimerSys.Tests
         {
             yield return new WaitForSeconds(testDuration.Seconds / 1.25f);
 
-            timerManager.ResetStopwatch(key);
+            timerSystem.ResetStopwatch(key);
             Assert.IsTrue(AtStartDuration);
         }
 
@@ -52,7 +63,7 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator RestartCausesCountingWithoutRegularStart()
         {
-            timerManager.RestartStopwatch(key);
+            timerSystem.RestartStopwatch(key);
             yield return new WaitForSeconds(testDuration.Seconds / 2);
             Assert.IsTrue(HasNonZeroTimeMeasured);
         }
@@ -65,10 +76,9 @@ namespace TimerSys.Tests
         [UnityTest]
         public virtual IEnumerator RestartResetsTime()
         {
-            yield return new WaitForSeconds(testDuration.Seconds);
-
-            timerManager.RestartStopwatch(key);
-            Assert.IsTrue(WithinStartDurationMarginOfError);
+            yield return new WaitForSeconds(testDuration.Seconds / 2);
+            timerSystem.RestartStopwatch(key);
+            Assert.IsTrue(AtStartDuration);
         }
 
         protected virtual bool WithinStartDurationMarginOfError
@@ -78,40 +88,86 @@ namespace TimerSys.Tests
 
         protected float startMarginOfError = 30;
 
+        [Test]
+        public override void TriggersOnStartListeners()
+        {
+            bool success = onStartListenerTriggered;
+            Assert.IsTrue(success);
+        }
+
+        protected bool onStartListenerTriggered;
+
+        protected virtual void OnStopwatchStart(TimerEventArgs args)
+        {
+            onStartListenerTriggered = true;
+        }
+
+        [UnityTest]
+        public override IEnumerator TriggersOnStopListeners()
+        {
+            yield return null;
+            timerSystem.StopStopwatch(key);
+            bool success = onStopListenerTriggered;
+            Assert.IsTrue(success);
+        }
+
+        protected bool onStopListenerTriggered;
+
+        protected virtual void OnStopwatchStop(TimerEventArgs args)
+        {
+            onStopListenerTriggered = true;
+        }
+
+        [UnityTest]
+        public override IEnumerator TriggersOnResetListeners()
+        {
+            yield return null;
+            timerSystem.ResetStopwatch(key);
+            bool success = onResetListenerTriggered;
+            Assert.IsTrue(success);
+        }
+
+        protected bool onResetListenerTriggered;
+
+        protected virtual void OnStopwatchReset(TimerEventArgs args)
+        {
+            onResetListenerTriggered = true;
+        }
+
+        [UnityTest]
+        public override IEnumerator TriggersOnRestartListeners()
+        {
+            yield return null;
+            timerSystem.RestartStopwatch(key);
+            bool success = onRestartListenerTriggered;
+            Assert.IsTrue(success);
+        }
+
+        protected bool onRestartListenerTriggered;
+
+        protected virtual void OnStopwatchRestart(TimerEventArgs args)
+        {
+            onRestartListenerTriggered = true;
+        }
+
         [TearDown]
         public override void TearDown()
         {
-            timerManager.StopStopwatch(key);
-            timerManager.ResetStopwatch(key);
+            timerSystem.StopStopwatch(key);
+            timerSystem.ResetStopwatch(key);
+            UnlistenForEvents();
+            onStopListenerTriggered = onResetListenerTriggered =
+                onRestartListenerTriggered = onStartListenerTriggered = false;
             base.TearDown();
         }
 
-        [Test]
-        [Ignore("")]
-        public override void TriggersOnStartListeners()
+        protected virtual void UnlistenForEvents()
         {
-            throw new System.NotImplementedException();
-        }
-
-        [UnityTest]
-        [Ignore("")]
-        public override IEnumerator TriggersOnStopListeners()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        [UnityTest]
-        [Ignore("")]
-        public override IEnumerator TriggersOnResetListeners()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        [UnityTest]
-        [Ignore("")]
-        public override IEnumerator TriggersOnRestartListeners()
-        {
-            throw new System.NotImplementedException();
+            var stopwatchEvents = timerSystem.SWEvents;
+            stopwatchEvents.UnlistenForStart(key, OnStopwatchStart);
+            stopwatchEvents.UnlistenForStop(key, OnStopwatchStop);
+            stopwatchEvents.UnlistenForReset(key, OnStopwatchReset);
+            stopwatchEvents.UnlistenForRestart(key, OnStopwatchRestart);
         }
     }
 }

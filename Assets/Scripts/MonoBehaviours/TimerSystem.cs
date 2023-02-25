@@ -4,6 +4,7 @@ using System.Timers;
 using System.Diagnostics;
 using TimeSpan = System.TimeSpan;
 using CDEventManager = CGT.Unity.TimerSys.CountdownManager.CountdownEventManager;
+using SWEventManager = CGT.Unity.TimerSys.StopwatchManager.EventManager<CGT.Unity.TimerSys.Stopwatch>;
 
 namespace CGT.Unity.TimerSys
 { 
@@ -16,9 +17,14 @@ namespace CGT.Unity.TimerSys
         public virtual int StopwatchCount { get { return stopwatchManager.TimerCount; } }
         protected StopwatchManager stopwatchManager = new StopwatchManager();
 
-        public virtual CDEventManager CountdownEvents
+        public virtual CDEventManager CDEvents
         {
             get { return countdownManager.Events; }
+        }
+
+        public virtual SWEventManager SWEvents
+        {
+            get { return stopwatchManager.Events; }
         }
 
         /// <summary>

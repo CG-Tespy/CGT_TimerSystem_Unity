@@ -14,11 +14,11 @@ namespace TimerSys.Tests
         public virtual void SetUp()
         {
             GameObject newGo = new GameObject();
-            timerManager = newGo.AddComponent<TimerSystem>();
+            timerSystem = newGo.AddComponent<TimerSystem>();
             testDuration = TimeSpan.FromMilliseconds(milliseconds);
         }
 
-        protected TimerSystem timerManager;
+        protected TimerSystem timerSystem;
 
         protected TimerKey key = new TimerKey(1);
 
@@ -28,8 +28,8 @@ namespace TimerSys.Tests
         [TearDown]
         public virtual void TearDown()
         {
-            timerManager.StopCountdown(key);
-            GameObject.Destroy(timerManager.gameObject);
+            timerSystem.StopCountdown(key);
+            GameObject.Destroy(timerSystem.gameObject);
         }
 
         [Test]
@@ -43,7 +43,6 @@ namespace TimerSys.Tests
 
         [UnityTest]
         public abstract IEnumerator TriggersOnRestartListeners();
-
         
     }
 }
