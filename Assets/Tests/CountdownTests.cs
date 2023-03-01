@@ -31,7 +31,6 @@ namespace TimerSys.Tests
 
         protected virtual CDEventManager CountdownEvents { get { return timerSystem.CDEvents; } }
 
-
         [UnityTest]
         public virtual IEnumerator CountsDownForIntendedTime()
         {

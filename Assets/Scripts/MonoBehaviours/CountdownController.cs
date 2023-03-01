@@ -9,59 +9,62 @@ namespace CGT.Unity.TimerSys
         protected virtual void Awake()
         {
             TimerSys = FindObjectOfType<TimerSystem>();
-            timerKey = new TimerKey(this);
+            key = new TimerKey(this);
         }
 
-        protected TimerKey timerKey;
+        protected TimerKey key;
 
         /// <summary>
         /// For the timer tied to this controller.
         /// </summary>
-        public virtual TimerKey TimerKey { get { return timerKey; } }
+        public virtual TimerKey Key { get { return key; } }
         
-        public TimeSpan LastSetFor { get; protected set; }
+        public TimeSpan LastSetFor
+        {
+            get { return TimerSys.GetCountdownTimeLastSetFor(key); }
+        }
 
         public virtual TimeSpan TimeLeft { get { return CurrentTime; } }
 
-        public TimeSpan CurrentTime { get { return TimerSys.GetCountdownCurrentTime(timerKey); }}
+        public TimeSpan CurrentTime { get { return TimerSys.GetCountdownCurrentTime(key); }}
 
         public virtual bool IsRunning
         {
-            get { return TimerSys.IsCountdownRunning(timerKey); }
+            get { return TimerSys.IsCountdownRunning(key); }
         }
 
         public virtual float TimeScale
         {
-            get { return TimerSys.GetCountdownTimeScale(timerKey); }
+            get { return TimerSys.GetCountdownTimeScale(key); }
 
-            set { TimerSys.SetCountdownTimeScale(timerKey, value); }
+            set { TimerSys.SetCountdownTimeScale(key, value); }
         }
 
         protected static TimerSystem TimerSys;
 
         public void StartUp()
         {
-            TimerSys.StartCountdown(timerKey);
+            TimerSys.StartCountdown(key);
         }
 
         public void Reset()
         {
-            TimerSys.ResetCountdown(timerKey);
+            TimerSys.ResetCountdown(key);
         }
 
         public void Stop()
         {
-            TimerSys.StopCountdown(timerKey);
+            TimerSys.StopCountdown(key);
         }
 
         public void Restart()
         {
-            TimerSys.RestartCountdown(timerKey);
+            TimerSys.RestartCountdown(key);
         }
     
         public virtual void SetFor(TimeSpan duration)
         {
-            TimerSys.SetCountdownFor(timerKey, duration);
+            TimerSys.SetCountdownFor(key, duration);
         }
 
         public void Tick()
