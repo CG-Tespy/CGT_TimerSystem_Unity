@@ -5,7 +5,7 @@ using System.Collections;
 using TimeSpan = System.TimeSpan;
 using CGT.Unity.TimerSys;
 
-namespace TimerSys.Tests
+namespace TimerSysTests
 {
     public abstract class TimerTests
     {

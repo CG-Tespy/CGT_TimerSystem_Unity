@@ -5,9 +5,9 @@ using CGT.Unity.TimerSys;
 using System.Collections;
 using TimeSpan = System.TimeSpan;
 
-namespace TimerSys.Tests
+namespace TimerSysTests
 {
-    public class TimerManagerTests
+    public class TimerSystemMonoBehaviourTests
     {
         [SetUp]
         public virtual void SetUp()

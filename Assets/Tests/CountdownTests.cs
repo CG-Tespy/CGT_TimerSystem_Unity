@@ -11,7 +11,7 @@ using Debug = UnityEngine.Debug;
 using CDEventManager = CGT.Unity.TimerSys.CountdownManager.CountdownEvents;
 using BuiltInMath = System.Math;
 
-namespace TimerSys.Tests
+namespace TimerSysTests
 {
     public class CountdownTests : TimerTests
     {

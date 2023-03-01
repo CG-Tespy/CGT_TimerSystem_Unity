@@ -2,7 +2,7 @@
 
 namespace CGT.Unity.TimerSys
 {
-    public class Stopwatch : ObservableTimer
+    public class Stopwatch : ObservableTimer, IObservableStopwatch
     {
         public Stopwatch()
         {

@@ -8,7 +8,7 @@ using Debug = UnityEngine.Debug;
 using CGT.Unity.TimerSys;
 using Math = System.Math;
 
-namespace TimerSys.Tests
+namespace TimerSysTests
 {
     public class StopwatchTests : TimerTests
     {
@@ -171,17 +171,45 @@ namespace TimerSys.Tests
         }
 
         [UnityTest]
-        [Ignore("")]
         public override IEnumerator TicksRightBasedOnRaisedTimeScale()
         {
-            throw new System.NotImplementedException();
+            timerSystem.ResetStopwatch(key);
+            timerSystem.SetStopwatchTimeScale(key, raisedTimeScale);
+            timerSystem.StartStopwatch(key);
+
+            // We're expecting the countdown to work faster than normal, 
+            // meaning it should finish its job sooner than usual
+            float lessThanNormal = (testDuration.Seconds / raisedTimeScale);
+            lessThanNormal += alteredTSMarginOfError * 0.001f;
+            yield return new WaitForSeconds(lessThanNormal);
+
+            float excessTime = Mathf.Abs(CurrentTime.Seconds - testDuration.Seconds);
+            bool success = excessTime <= alteredTSMarginOfError * 0.001f;
+            Assert.IsTrue(success);
         }
 
+        protected float raisedTimeScale = 1.50f;
+        protected float alteredTSMarginOfError = 25; // in ms
+
+
         [UnityTest]
-        [Ignore("")]
         public override IEnumerator TicksRightBasedOnReducedTimeScale()
         {
-            throw new System.NotImplementedException();
+            timerSystem.ResetCountdown(key);
+            timerSystem.SetStopwatchTimeScale(key, reducedTimeScale);
+            timerSystem.StartStopwatch(key);
+
+            // We're expecting the stop to work _slower_ than normal, 
+            // meaning it should _take longer_ reach the test duration
+            float moreThanNormal = (testDuration.Seconds / reducedTimeScale);
+            moreThanNormal += alteredTSMarginOfError * 0.001f;
+            yield return new WaitForSeconds(moreThanNormal);
+
+            float excessTime = Mathf.Abs(CurrentTime.Seconds - testDuration.Seconds);
+            bool success = excessTime <= alteredTSMarginOfError * 0.001f;
+            Assert.IsTrue(success);
         }
+
+        protected float reducedTimeScale = 0.64f;
     }
 }
