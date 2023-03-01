@@ -6,7 +6,7 @@ namespace CGT.Unity.TimerSys
     /// <summary>
     /// A Timer that counts down from a start time. 
     /// </summary>
-    public class Countdown : ObservableTimer, ICountdown
+    public class Countdown : ObservableTimer, IObservableCountdown
     {
         public TimeSpan TimeLeft { get { return CurrentTime; } }
 

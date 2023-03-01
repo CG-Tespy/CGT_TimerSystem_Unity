@@ -116,5 +116,15 @@ namespace CGT.Unity.TimerSys
             stopwatchManager.SetTimerTimeScale(key, newTimeScale);
         }
 
+        public virtual bool IsCountdownRunning(TimerKey key)
+        {
+            return countdownManager.IsTimerRunning(key);
+        }
+
+        public virtual float GetCountdownTimeScale(TimerKey key)
+        {
+            return countdownManager.GetTimerTimeScale(key);
+        }
+
     }
 }

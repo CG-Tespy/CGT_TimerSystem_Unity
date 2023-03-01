@@ -1,80 +1,14 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CGT.Unity.TimerSys
 {
 	public class CountdownController : MonoBehaviour, ICountdown
 	{
-        event OnTimerEvent ICountdown.OnEnd
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        event OnTimerEvent IObservableTimer.OnStart
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        event OnTimerEvent IObservableTimer.OnStop
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        event OnTimerEvent IObservableTimer.OnReset
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        event OnTimerEvent IObservableTimer.OnRestart
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
 
         protected virtual void Awake()
         {
-            TimerManager = FindObjectOfType<TimerSystem>();
+            TimerSys = FindObjectOfType<TimerSystem>();
             timerKey = new TimerKey(this);
         }
 
@@ -89,59 +23,50 @@ namespace CGT.Unity.TimerSys
 
         public virtual TimeSpan TimeLeft { get { return CurrentTime; } }
 
-        public TimeSpan CurrentTime { get { return TimerManager.GetCountdownCurrentTime(timerKey); }}
+        public TimeSpan CurrentTime { get { return TimerSys.GetCountdownCurrentTime(timerKey); }}
 
-        public bool IsRunning
+        public virtual bool IsRunning
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { return TimerSys.IsCountdownRunning(timerKey); }
         }
 
-        public float TimeScale
+        public virtual float TimeScale
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { return TimerSys.GetCountdownTimeScale(timerKey); }
 
-            set
-            {
-                throw new NotImplementedException();
-            }
+            set { TimerSys.SetCountdownTimeScale(timerKey, value); }
         }
 
-        protected static TimerSystem TimerManager;
+        protected static TimerSystem TimerSys;
 
         public void StartUp()
         {
-            TimerManager.StartCountdown(timerKey);
+            TimerSys.StartCountdown(timerKey);
         }
 
         public void Reset()
         {
-            TimerManager.ResetCountdown(timerKey);
+            TimerSys.ResetCountdown(timerKey);
         }
 
         public void Stop()
         {
-            TimerManager.StopCountdown(timerKey);
+            TimerSys.StopCountdown(timerKey);
         }
 
         public void Restart()
         {
-            TimerManager.RestartCountdown(timerKey);
+            TimerSys.RestartCountdown(timerKey);
         }
     
         public virtual void SetFor(TimeSpan duration)
         {
-            TimerManager.SetCountdownFor(timerKey, duration);
+            TimerSys.SetCountdownFor(timerKey, duration);
         }
 
         public void Tick()
         {
-            Debug.LogWarning("Should not call Tick from a CountdownController");
+            Debug.LogWarning("Should not call Tick from a CountdownController. Does a whole lotta nothin'.");
         }
     }
 }

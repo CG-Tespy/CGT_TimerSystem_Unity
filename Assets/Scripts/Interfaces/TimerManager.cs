@@ -147,5 +147,17 @@ namespace CGT.Unity.TimerSys
 			TTimer inQuestion = GetTimer(key);
 			inQuestion.TimeScale = newTimeScale;
         }
+
+		public virtual bool IsTimerRunning(TimerKey key)
+        {
+			TTimer inQuestion = GetTimer(key);
+			return inQuestion.IsRunning;
+        }
+
+		public virtual float GetTimerTimeScale(TimerKey key)
+        {
+			TTimer inQuestion = GetTimer(key);
+			return inQuestion.TimeScale;
+		}
 	}
 }
