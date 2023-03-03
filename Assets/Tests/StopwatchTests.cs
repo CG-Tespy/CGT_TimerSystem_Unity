@@ -16,9 +16,13 @@ namespace TimerSysTests
         public override void SetUp()
         {
             base.SetUp();
-
             ListenForEvents();
-            timerSystem.StartStopwatch(key);
+            timerSystem.StartTimer(key);
+        }
+
+        protected override void RegisterTimerInSystem()
+        {
+            timerSystem.RegisterStopwatch(key);
         }
 
         protected virtual void ListenForEvents()
@@ -40,16 +44,17 @@ namespace TimerSysTests
             }
         }
 
-        protected override TimeSpan CurrentTime { get { return timerSystem.GetStopwatchCurrentTime(key); } }
+        protected override TimeSpan CurrentTime { get { return timerSystem.GetTimerCurrentTime(key); } }
 
         protected float marginOfError = 15; // milliseconds
 
         [UnityTest]
         public virtual IEnumerator ResetsToRightTime()
         {
+            Debug.Log("In StopwatchTests ResetsToRightTime before wait");
             yield return new WaitForSeconds(testDuration.Seconds / 1.25f);
-
-            timerSystem.ResetStopwatch(key);
+            Debug.Log("In StopwatchTests ResetsToRightTime after wait");
+            timerSystem.ResetTimer(key);
             Assert.IsTrue(AtStartDuration);
         }
 
@@ -63,7 +68,7 @@ namespace TimerSysTests
         [UnityTest]
         public virtual IEnumerator RestartCausesCountingWithoutRegularStart()
         {
-            timerSystem.RestartStopwatch(key);
+            timerSystem.RestartTimer(key);
             yield return new WaitForSeconds(testDuration.Seconds / 2);
             Assert.IsTrue(HasNonZeroTimeMeasured);
         }
@@ -77,7 +82,7 @@ namespace TimerSysTests
         public virtual IEnumerator RestartResetsTime()
         {
             yield return new WaitForSeconds(testDuration.Seconds / 2);
-            timerSystem.RestartStopwatch(key);
+            timerSystem.RestartTimer(key);
             Assert.IsTrue(AtStartDuration);
         }
 
@@ -106,7 +111,7 @@ namespace TimerSysTests
         public override IEnumerator TriggersOnStopListeners()
         {
             yield return null;
-            timerSystem.StopStopwatch(key);
+            timerSystem.StopTimer(key);
             bool success = onStopListenerTriggered;
             Assert.IsTrue(success);
         }
@@ -122,7 +127,7 @@ namespace TimerSysTests
         public override IEnumerator TriggersOnResetListeners()
         {
             yield return null;
-            timerSystem.ResetStopwatch(key);
+            timerSystem.ResetTimer(key);
             bool success = onResetListenerTriggered;
             Assert.IsTrue(success);
         }
@@ -138,7 +143,7 @@ namespace TimerSysTests
         public override IEnumerator TriggersOnRestartListeners()
         {
             yield return null;
-            timerSystem.RestartStopwatch(key);
+            timerSystem.RestartTimer(key);
             bool success = onRestartListenerTriggered;
             Assert.IsTrue(success);
         }
@@ -153,8 +158,8 @@ namespace TimerSysTests
         [TearDown]
         public override void TearDown()
         {
-            timerSystem.StopStopwatch(key);
-            timerSystem.ResetStopwatch(key);
+            timerSystem.StopTimer(key);
+            timerSystem.ResetTimer(key);
             UnlistenForEvents();
             onStopListenerTriggered = onResetListenerTriggered =
                 onRestartListenerTriggered = onStartListenerTriggered = false;
@@ -173,9 +178,9 @@ namespace TimerSysTests
         [UnityTest]
         public override IEnumerator TicksRightBasedOnRaisedTimeScale()
         {
-            timerSystem.ResetStopwatch(key);
-            timerSystem.SetStopwatchTimeScale(key, raisedTimeScale);
-            timerSystem.StartStopwatch(key);
+            timerSystem.ResetTimer(key);
+            timerSystem.SetTimerTimeScale(key, raisedTimeScale);
+            timerSystem.StartTimer(key);
 
             // We're expecting the countdown to work faster than normal, 
             // meaning it should finish its job sooner than usual
@@ -195,9 +200,9 @@ namespace TimerSysTests
         [UnityTest]
         public override IEnumerator TicksRightBasedOnReducedTimeScale()
         {
-            timerSystem.ResetCountdown(key);
-            timerSystem.SetStopwatchTimeScale(key, reducedTimeScale);
-            timerSystem.StartStopwatch(key);
+            timerSystem.ResetTimer(key);
+            timerSystem.SetTimerTimeScale(key, reducedTimeScale);
+            timerSystem.StartTimer(key);
 
             // We're expecting the stop to work _slower_ than normal, 
             // meaning it should _take longer_ reach the test duration

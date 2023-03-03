@@ -8,7 +8,7 @@ namespace CGT.Unity.TimerSys
 	/// Sets up common functionality for the timer managerss
 	/// </summary>
 	/// <typeparam name="TTimer"></typeparam>
-	public abstract class TimerManager<TTimer> where TTimer : IObservableTimer, new()
+	public abstract class TimerManager<TTimer>: ITimerManager where TTimer : IObservableTimer, new()
 	{
 		public virtual int TimerCount { get { return timers.Keys.Count; } }
 		protected Dictionary<TimerKey, TTimer> timers = new Dictionary<TimerKey, TTimer>();
@@ -28,17 +28,7 @@ namespace CGT.Unity.TimerSys
 
 		protected virtual TTimer GetTimer(TimerKey key)
         {
-			EnsureTimerExists(key);
 			return timers[key];
-        }
-
-		protected virtual void EnsureTimerExists(TimerKey key)
-        {
-			bool alreadyExists = timers.ContainsKey(key);
-			if (alreadyExists)
-				return;
-
-			timers.Add(key, new TTimer());
         }
 
 		public virtual void StopTimer(TimerKey key)
@@ -159,5 +149,18 @@ namespace CGT.Unity.TimerSys
 			TTimer inQuestion = GetTimer(key);
 			return inQuestion.TimeScale;
 		}
+
+		public virtual bool HasTimerWith(TimerKey key)
+        {
+			return timers.ContainsKey(key);
+        }
+
+		public virtual void RegisterTimerWith(TimerKey key)
+        {
+			if (HasTimerWith(key))
+				return;
+
+			timers.Add(key, new TTimer());
+        }
 	}
 }

@@ -20,6 +20,11 @@ namespace TimerSysTests
             controller.StartUp();
         }
 
+        protected override void RegisterTimerInSystem()
+        {
+            // The timer controller should get its thing registered, so we dont need to do it here
+        }
+
         protected virtual void SetUpCountdownController()
         {
             GameObject controllerGO = new GameObject("CountdownController");
@@ -60,7 +65,7 @@ namespace TimerSysTests
         {
             yield return new WaitForSeconds(testDuration.Seconds);
 
-            timerSystem.ResetCountdown(key);
+            timerSystem.ResetTimer(key);
             Assert.IsTrue(CountdownAtTestDuration);
         }
 

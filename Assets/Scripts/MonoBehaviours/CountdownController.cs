@@ -10,6 +10,7 @@ namespace CGT.Unity.TimerSys
         {
             TimerSys = FindObjectOfType<TimerSystem>();
             key = new TimerKey(this);
+            TimerSys.RegisterCountdown(key);
         }
 
         protected TimerKey key;
@@ -26,40 +27,40 @@ namespace CGT.Unity.TimerSys
 
         public virtual TimeSpan TimeLeft { get { return CurrentTime; } }
 
-        public TimeSpan CurrentTime { get { return TimerSys.GetCountdownCurrentTime(key); }}
+        public TimeSpan CurrentTime { get { return TimerSys.GetTimerCurrentTime(key); }}
 
         public virtual bool IsRunning
         {
-            get { return TimerSys.IsCountdownRunning(key); }
+            get { return TimerSys.IsTimerRunning(key); }
         }
 
         public virtual float TimeScale
         {
-            get { return TimerSys.GetCountdownTimeScale(key); }
+            get { return TimerSys.GetTimerTimeScale(key); }
 
-            set { TimerSys.SetCountdownTimeScale(key, value); }
+            set { TimerSys.SetTimerTimeScale(key, value); }
         }
 
         protected static TimerSystem TimerSys;
 
         public void StartUp()
         {
-            TimerSys.StartCountdown(key);
+            TimerSys.StartTimer(key);
         }
 
         public void Reset()
         {
-            TimerSys.ResetCountdown(key);
+            TimerSys.ResetTimer(key);
         }
 
         public void Stop()
         {
-            TimerSys.StopCountdown(key);
+            TimerSys.StopTimer(key);
         }
 
         public void Restart()
         {
-            TimerSys.RestartCountdown(key);
+            TimerSys.RestartTimer(key);
         }
     
         public virtual void SetFor(TimeSpan duration)

@@ -18,86 +18,136 @@ namespace CGT.Unity.TimerSys
 
         public virtual TimerEvents SWEvents { get { return stopwatchManager.Events; } }
 
-        /// <summary>
-        /// Starts the Stopwatch with the passed ID
-        /// </summary>
-        /// <param name="key"></param>
-        public virtual void StartStopwatch(TimerKey key)
+        public virtual void RegisterStopwatch(TimerKey key)
         {
-            stopwatchManager.StartTimer(key);
+            if (stopwatchManager.HasTimerWith(key))
+                return;
+
+            if (countdownManager.HasTimerWith(key))
+            {
+                string errorMessage = "Cannot register Stopwatch with a key that is already tied to a Countdown.";
+                Debug.LogError(errorMessage);
+                return;
+            }
+
+            stopwatchManager.RegisterTimerWith(key);
         }
 
-        public virtual void StopStopwatch(TimerKey key)
+        public virtual void RegisterCountdown(TimerKey key)
         {
-            stopwatchManager.StopTimer(key);
+            if (countdownManager.HasTimerWith(key))
+                return;
+
+            if (stopwatchManager.HasTimerWith(key))
+            {
+                string errorMessage = "Cannot register Stopwatch with a key that is already tied to a Countdown.";
+                Debug.LogError(errorMessage);
+                return;
+            }
+
+            countdownManager.RegisterTimerWith(key);
         }
 
-        /// <summary>
-        /// Starts the Countdown with the passed ID. Does nothing if it's already
-        /// running.
-        /// </summary>
-        /// <param name="key"></param>
-        public virtual void StartCountdown(TimerKey key)
+        public virtual void StartTimer(TimerKey key)
         {
-            countdownManager.StartTimer(key);
+            Validate(key);
+            ITimerManager managerForTheJob = TimerManagerWith(key);
+            managerForTheJob.StartTimer(key);
+        }
+
+        protected virtual ITimerManager TimerManagerWith(TimerKey key)
+        {
+            if (countdownManager.HasTimerWith(key))
+                return countdownManager;
+            else if (stopwatchManager.HasTimerWith(key))
+                return stopwatchManager;
+            else
+                return null;
+        }
+
+        protected virtual void Validate(TimerKey key)
+        {
+            bool notRegistered = !countdownManager.HasTimerWith(key) && !stopwatchManager.HasTimerWith(key);  
+            if (notRegistered)
+            {
+                string errorMessage = "Cannot start a timer not registered to either a Stopwatch or a Countdown.";
+                throw new System.ArgumentException(errorMessage);
+            }
+        }
+
+        public virtual void StopTimer(TimerKey key)
+        {
+            Validate(key);
+            ITimerManager managerForTheJob = TimerManagerWith(key);
+            managerForTheJob.StopTimer(key);
+        }
+
+        public virtual void ResetTimer(TimerKey key)
+        {
+            Validate(key);
+            ITimerManager managerForTheJob = TimerManagerWith(key);
+            managerForTheJob.ResetTimer(key);
+        }
+
+        public virtual void RestartTimer(TimerKey key)
+        {
+            Validate(key);
+            ITimerManager managerForTheJob = TimerManagerWith(key);
+            managerForTheJob.RestartTimer(key);
+        }
+
+        public virtual TimeSpan GetTimerCurrentTime(TimerKey key)
+        {
+            Validate(key);
+            ITimerManager managerForTheJob = TimerManagerWith(key);
+            return managerForTheJob.GetTimerCurrentTime(key);
+        }
+
+        public virtual float GetTimerTimeScale(TimerKey key)
+        {
+            Validate(key);
+            ITimerManager managerForTheJob = TimerManagerWith(key);
+            return managerForTheJob.GetTimerTimeScale(key);
+        }
+
+        public virtual void SetTimerTimeScale(TimerKey key, float newScale)
+        {
+            Validate(key);
+            ITimerManager managerForTheJob = TimerManagerWith(key);
+            managerForTheJob.SetTimerTimeScale(key, newScale);
+        }
+
+        public virtual bool IsTimerRunning(TimerKey key)
+        {
+            Validate(key);
+            ITimerManager managerForTheJob = TimerManagerWith(key);
+            return managerForTheJob.IsTimerRunning(key);
         }
 
         protected static int millisecondsPerSecond = 1000;
 
         public virtual void SetCountdownFor(TimerKey key, TimeSpan duration)
         {
+            ValidateCountdown(key);
             countdownManager.SetCountdownFor(key, duration);
         }
 
-        public virtual void StopCountdown(TimerKey key)
+        protected virtual void ValidateCountdown(TimerKey key)
         {
-            countdownManager.StopTimer(key);
-        }
-
-        public virtual TimeSpan CountdownTimeLeft(TimerKey key)
-        {
-            return countdownManager.GetCountdownTimeLeft(key);
+            bool isValid = countdownManager.HasTimerWith(key);
+            if (!isValid)
+            {
+                string errorMessage = "Can't use a Countdown function with a key not tied to a Countdown";
+                throw new System.ArgumentException(errorMessage);
+            }
         }
 
         public delegate void TimerEventHandler(TimerKey timerNumber);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>The current time of the Countdown assigned to the passed number.</returns>
-        public virtual TimeSpan GetCountdownCurrentTime(TimerKey key)
-        {
-            return countdownManager.GetCountdownTimeLeft(key);
-        }
-
-        public virtual void ResetCountdown(TimerKey key)
-        {
-            countdownManager.ResetTimer(key);
-        }
-
-        public virtual void RestartCountdown(TimerKey key)
-        {
-            countdownManager.RestartTimer(key);
-        }
-
         public virtual TimeSpan GetCountdownTimeLastSetFor(TimerKey key)
         {
+            ValidateCountdown(key);
             return countdownManager.GetCountdownTimeLastSetFor(key);
-        }
-
-        public virtual TimeSpan GetStopwatchCurrentTime(TimerKey key)
-        {
-            return stopwatchManager.GetTimerCurrentTime(key);
-        }
-
-        public virtual void ResetStopwatch(TimerKey key)
-        {
-            stopwatchManager.ResetTimer(key);
-        }
-
-        public virtual void RestartStopwatch(TimerKey key)
-        {
-            stopwatchManager.RestartTimer(key);
         }
 
         protected virtual void Update()
@@ -105,31 +155,5 @@ namespace CGT.Unity.TimerSys
             countdownManager.TickTimers();
             stopwatchManager.TickTimers();
         }
-
-        public virtual void SetCountdownTimeScale(TimerKey key, float newTimeScale)
-        {
-            countdownManager.SetTimerTimeScale(key, newTimeScale);
-        }
-
-        public virtual void SetStopwatchTimeScale(TimerKey key, float newTimeScale)
-        {
-            stopwatchManager.SetTimerTimeScale(key, newTimeScale);
-        }
-
-        public virtual bool IsCountdownRunning(TimerKey key)
-        {
-            return countdownManager.IsTimerRunning(key);
-        }
-
-        public virtual bool IsStopwatchRunning(TimerKey key)
-        {
-            return stopwatchManager.IsTimerRunning(key);
-        }
-
-        public virtual float GetCountdownTimeScale(TimerKey key)
-        {
-            return countdownManager.GetTimerTimeScale(key);
-        }
-
     }
 }

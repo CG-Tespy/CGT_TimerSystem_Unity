@@ -26,7 +26,12 @@ namespace TimerSysTests
             CountdownEvents.ListenForStop(key, OnCountdownStop);
             CountdownEvents.ListenForReset(key, OnCountdownReset);
             CountdownEvents.ListenForRestart(key, OnCountdownRestart);
-            timerSystem.StartCountdown(key);
+            timerSystem.StartTimer(key);
+        }
+
+        protected override void RegisterTimerInSystem()
+        {
+            timerSystem.RegisterCountdown(key);
         }
 
         protected virtual CDEventManager CountdownEvents { get { return timerSystem.CDEvents; } }
@@ -55,7 +60,7 @@ namespace TimerSysTests
             }
         }
 
-        protected override TimeSpan CurrentTime { get { return timerSystem.GetCountdownCurrentTime(key); } }
+        protected override TimeSpan CurrentTime { get { return timerSystem.GetTimerCurrentTime(key); } }
 
         protected float endMarginOfError = 300;
         // Timers aren't always so precise, so we need margins of error like this.
@@ -66,7 +71,7 @@ namespace TimerSysTests
         {
             yield return new WaitForSeconds(testDuration.Seconds);
 
-            timerSystem.ResetCountdown(key);
+            timerSystem.ResetTimer(key);
             Assert.IsTrue(CountdownAtTestDuration);
         }
 
@@ -77,7 +82,7 @@ namespace TimerSysTests
         {
             yield return new WaitForSeconds(testDuration.Seconds / 2);
 
-            timerSystem.RestartCountdown(key);
+            timerSystem.RestartTimer(key);
             Assert.IsTrue(CountdownWithinBeginMarginOfError);
         }
 
@@ -144,7 +149,7 @@ namespace TimerSysTests
         public override IEnumerator TriggersOnStopListeners()
         {
             yield return null;
-            timerSystem.StopCountdown(key);
+            timerSystem.StopTimer(key);
             yield return null;
             bool success = countdownStopTriggered;
             Assert.IsTrue(success);
@@ -161,7 +166,7 @@ namespace TimerSysTests
         public override IEnumerator TriggersOnResetListeners()
         {
             yield return null;
-            timerSystem.ResetCountdown(key);
+            timerSystem.ResetTimer(key);
             yield return null;
             bool success = countdownResetTriggered;
             Assert.IsTrue(success);
@@ -178,7 +183,7 @@ namespace TimerSysTests
         public override IEnumerator TriggersOnRestartListeners()
         {
             yield return null;
-            timerSystem.RestartCountdown(key);
+            timerSystem.RestartTimer(key);
             yield return null;
             bool success = countdownRestartTriggered;
             Assert.IsTrue(success);
@@ -194,9 +199,9 @@ namespace TimerSysTests
         [UnityTest]
         public override IEnumerator TicksRightBasedOnRaisedTimeScale()
         {
-            timerSystem.ResetCountdown(key);
-            timerSystem.SetCountdownTimeScale(key, raisedTimeScale);
-            timerSystem.StartCountdown(key);
+            timerSystem.ResetTimer(key);
+            timerSystem.SetTimerTimeScale(key, raisedTimeScale);
+            timerSystem.StartTimer(key);
 
             // We're expecting the countdown to work faster than normal, 
             // meaning it should finish its job sooner than usual
@@ -217,9 +222,9 @@ namespace TimerSysTests
         [UnityTest]
         public override IEnumerator TicksRightBasedOnReducedTimeScale()
         {
-            timerSystem.ResetCountdown(key);
-            timerSystem.SetCountdownTimeScale(key, reducedTimeScale);
-            timerSystem.StartCountdown(key);
+            timerSystem.ResetTimer(key);
+            timerSystem.SetTimerTimeScale(key, reducedTimeScale);
+            timerSystem.StartTimer(key);
 
             // We're expecting the countdown to work _slower_ than normal, 
             // meaning it should finish its job _later_ than usual

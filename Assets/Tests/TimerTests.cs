@@ -13,10 +13,13 @@ namespace TimerSysTests
         [SetUp]
         public virtual void SetUp()
         {
+            testDuration = TimeSpan.FromMilliseconds(milliseconds);
             GameObject newGo = new GameObject();
             timerSystem = newGo.AddComponent<TimerSystem>();
-            testDuration = TimeSpan.FromMilliseconds(milliseconds);
+            RegisterTimerInSystem();
         }
+
+        protected abstract void RegisterTimerInSystem();
 
         protected TimerSystem timerSystem;
 
@@ -28,7 +31,7 @@ namespace TimerSysTests
         [TearDown]
         public virtual void TearDown()
         {
-            timerSystem.StopCountdown(key);
+            timerSystem.StopTimer(key);
             GameObject.Destroy(timerSystem.gameObject);
         }
 

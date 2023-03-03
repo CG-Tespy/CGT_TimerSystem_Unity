@@ -16,7 +16,7 @@ namespace TimerSysTests
             timerManager = newGo.AddComponent<TimerSystem>();
             testDuration = TimeSpan.FromMilliseconds(milliseconds);
             timerManager.SetCountdownFor(key, testDuration);
-            timerManager.StartCountdown(key);
+            timerManager.StartTimer(key);
         }
 
         protected TimerSystem timerManager;
@@ -26,12 +26,10 @@ namespace TimerSysTests
         protected double milliseconds = 2000.0;
         protected TimeSpan testDuration;
 
-        
-
         [TearDown]
         public virtual void TearDown()
         {
-            timerManager.StopCountdown(key);
+            timerManager.StopTimer(key);
             GameObject.Destroy(timerManager.gameObject);
         }
     }
