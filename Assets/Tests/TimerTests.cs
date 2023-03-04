@@ -14,7 +14,7 @@ namespace TimerSysTests
         public virtual void SetUp()
         {
             testDuration = TimeSpan.FromMilliseconds(milliseconds);
-            GameObject newGo = new GameObject();
+            GameObject newGo = new GameObject("TimerSystem");
             timerSystem = newGo.AddComponent<TimerSystem>();
             RegisterTimerInSystem();
         }

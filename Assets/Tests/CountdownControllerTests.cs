@@ -14,10 +14,10 @@ namespace TimerSysTests
         {
             base.SetUp();
             SetUpCountdownController();
-            key = controller.Key; // To make sure we're testing the one the controller is tied to
             
             controller.SetFor(testDuration);
             controller.StartUp();
+            key = controller.Key; // To make sure we're testing the timer the controller is tied to
         }
 
         protected override void RegisterTimerInSystem()
@@ -65,9 +65,13 @@ namespace TimerSysTests
         {
             yield return new WaitForSeconds(testDuration.Seconds);
 
+            //controller.Reset();
             timerSystem.ResetTimer(key);
-            Assert.IsTrue(CountdownAtTestDuration);
+            bool success = CountdownAtTestDuration;
+            Assert.IsTrue(success);
         }
+
+        protected virtual bool CountdownAtTestDuration { get { return CurrentTime.Equals(testDuration); } }
 
         [UnityTest]
         public virtual IEnumerator RestartsCorrectlyMidRun()
@@ -83,7 +87,9 @@ namespace TimerSysTests
             get
             {
                 TimeSpan timeLeft = CurrentTime;
-                return testDuration.TotalMilliseconds - timeLeft.TotalMilliseconds <= beginMarginOfError;
+                double excessTime = System.Math.Abs(testDuration.TotalMilliseconds - timeLeft.TotalMilliseconds);
+                bool result = excessTime <= beginMarginOfError;
+                return result;
             }
         }
 
@@ -149,7 +155,7 @@ namespace TimerSysTests
             throw new System.NotImplementedException();
         }
 
-        protected virtual bool CountdownAtTestDuration { get { return CurrentTime.Equals(testDuration); } }
+        
 
         protected override TimeSpan CurrentTime
         {
@@ -159,6 +165,7 @@ namespace TimerSysTests
         [TearDown]
         public override void TearDown()
         {
+            controller.Stop();
             base.TearDown();
             GameObject.Destroy(controller.gameObject);
         }

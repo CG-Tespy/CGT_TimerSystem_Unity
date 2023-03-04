@@ -67,10 +67,10 @@ namespace CGT.Unity.TimerSys
 
         protected virtual void Validate(TimerKey key)
         {
-            bool notRegistered = !countdownManager.HasTimerWith(key) && !stopwatchManager.HasTimerWith(key);  
-            if (notRegistered)
+            bool registered = countdownManager.HasTimerWith(key) || stopwatchManager.HasTimerWith(key);  
+            if (!registered)
             {
-                string errorMessage = "Cannot start a timer not registered to either a Stopwatch or a Countdown.";
+                string errorMessage = "Cannot work with a timer key not registered with either a Stopwatch or a Countdown.";
                 throw new System.ArgumentException(errorMessage);
             }
         }
