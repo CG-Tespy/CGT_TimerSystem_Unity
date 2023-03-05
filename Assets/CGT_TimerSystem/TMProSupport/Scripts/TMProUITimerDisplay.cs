@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace CGT.Unity.TimerSys
 {
+    [AddComponentMenu("CGT TimerSys/TMPro UI Timer Display")]
     public class TMProUITimerDisplay : TimerDisplay
     {
         [SerializeField]

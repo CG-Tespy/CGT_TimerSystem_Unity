@@ -1,6 +1,9 @@
-﻿namespace CGT.Unity.TimerSys
+﻿using UnityEngine;
+
+namespace CGT.Unity.TimerSys
 {
-	public class StopwatchController : TimerController, IStopwatch
+    [AddComponentMenu("CGT TimerSys/Stopwatch Controller")]
+    public class StopwatchController : TimerController, IStopwatch
 	{
         protected override void RegisterInSystem()
         {

@@ -5,9 +5,14 @@ using TimerEvents = CGT.Unity.TimerSys.StopwatchManager.TimerEvents;
 
 namespace CGT.Unity.TimerSys
 { 
-    [AddComponentMenu("CGT TimerSys/Timer Manager")]
+    [AddComponentMenu("")]
     public class TimerSystem : MonoBehaviour
     {
+        protected virtual void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
+        }
+
         public virtual int CountdownCount { get { return countdownManager.TimerCount; } }
         protected CountdownManager countdownManager = new CountdownManager();
 

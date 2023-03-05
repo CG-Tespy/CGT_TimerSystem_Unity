@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace CGT.Unity.TimerSys
 {
-	public class CountdownController : TimerController, ICountdown
+    [AddComponentMenu("CGT TimerSys/Countdown Controller")]
+    public class CountdownController : TimerController, ICountdown
 	{
         [Header("Starting Time")]
         [SerializeField]
