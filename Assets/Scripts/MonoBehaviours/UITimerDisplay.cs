@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace CGT.Unity.TimerSys
@@ -8,18 +6,10 @@ namespace CGT.Unity.TimerSys
     /// <summary>
     /// For displaying timers in Unity UI Text fields.
     /// </summary>
-    public class UITimerText : TimerText
+    public class UITimerDisplay : TimerDisplay
     {
         [SerializeField]
         protected Text textField;
-
-        protected virtual void Update()
-        {
-            if (IsDisplayingTime)
-            {
-                DisplayTime();
-            }
-        }
 
         public override void DisplayTime()
         {

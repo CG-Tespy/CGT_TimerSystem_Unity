@@ -3,7 +3,7 @@
     /// <summary>
     /// For classes that display timers in text fields.
     /// </summary>
-    public interface ITimerText
+    public interface ITimerDisplay
     {
         void DisplayTime();
 

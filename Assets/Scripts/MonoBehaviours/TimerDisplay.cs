@@ -7,7 +7,7 @@ namespace CGT.Unity.TimerSys
 	/// <summary>
 	/// For displaying a TimerController's text.
 	/// </summary>
-	public abstract class TimerText : MonoBehaviour, ITimerText
+	public abstract class TimerDisplay : MonoBehaviour, ITimerDisplay
 	{
 		[SerializeField]
 		protected TimerController toDisplayFor;
@@ -21,6 +21,12 @@ namespace CGT.Unity.TimerSys
 		protected virtual void Start()
 		{
 			IsDisplayingTime = displayOnStart;
+		}
+
+		protected virtual void Update()
+		{
+			if (IsDisplayingTime)
+				DisplayTime();
 		}
 
 		public virtual bool IsDisplayingTime { get; set; }
