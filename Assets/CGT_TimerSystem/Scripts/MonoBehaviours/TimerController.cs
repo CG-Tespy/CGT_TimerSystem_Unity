@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using TimeSpan = System.TimeSpan;
 
 namespace CGT.Unity.TimerSys
@@ -53,27 +54,36 @@ namespace CGT.Unity.TimerSys
         public virtual void StartUp()
         {
             timerSys.StartTimer(key);
-        }
-
-        public virtual void Reset()
-        {
-            timerSys.ResetTimer(key);
+            OnStart.Invoke();
         }
 
         public virtual void Stop()
         {
             timerSys.StopTimer(key);
+            OnStop.Invoke();
+        }
+
+        public virtual void Reset()
+        {
+            timerSys.ResetTimer(key);
+            OnReset.Invoke();
         }
 
         public virtual void Restart()
         {
             timerSys.RestartTimer(key);
+            OnRestart.Invoke();
         }
 
         public virtual void Tick()
         {
             Debug.LogWarning("Should not call Tick from a TimerController. Does a whole lotta nothin'.");
         }
+
+        public UnityEvent OnStart = new UnityEvent();
+        public UnityEvent OnStop = new UnityEvent();
+        public UnityEvent OnReset = new UnityEvent();
+        public UnityEvent OnRestart = new UnityEvent();
 
     }
 }
