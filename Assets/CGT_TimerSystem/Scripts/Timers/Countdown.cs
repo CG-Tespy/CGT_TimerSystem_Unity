@@ -34,5 +34,11 @@ namespace CGT.Unity.TimerSys
             }
         }
 
+        protected override TimerEventArgs CreateEventArgs()
+        {
+            CountdownEventArgs eventArgs = new CountdownEventArgs(this);
+            return eventArgs;
+        }
+
     }
 }

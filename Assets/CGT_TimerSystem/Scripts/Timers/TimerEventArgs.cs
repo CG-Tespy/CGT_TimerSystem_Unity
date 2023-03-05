@@ -1,17 +1,28 @@
-﻿namespace CGT.Unity.TimerSys
+﻿using TimeSpan = System.TimeSpan;
+
+namespace CGT.Unity.TimerSys
 {
     public class TimerEventArgs
     {
-        public ITimer Timer { get; set; }
+        public TimerEventArgs(ITimer timer)
+        {
+            this.Timer = timer;
+        }
+
+        protected ITimer Timer { get; set; }
+
+        public virtual TimeSpan CurrentTime {  get { return Timer.CurrentTime; } }
+        public virtual float TimeScale { get { return Timer.TimeScale; } }
     }
 
-    public class CountdownEventArgs
+    public class CountdownEventArgs : TimerEventArgs
     {
-        public virtual Countdown Countdown { get; set; }
+        public CountdownEventArgs(Countdown timer) : base(timer) { }
+        public virtual TimeSpan LastSetFor { get { return (Timer as Countdown).LastSetFor; } }
     }
 
-    public class StopwatchEventArgs
+    public class StopwatchEventArgs : TimerEventArgs
     {
-        public virtual Stopwatch Stopwatch { get; set; }
+        public StopwatchEventArgs(Stopwatch timer) : base(timer) { }
     }
 }

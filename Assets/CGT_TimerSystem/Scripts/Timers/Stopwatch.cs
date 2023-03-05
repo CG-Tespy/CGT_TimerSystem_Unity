@@ -13,5 +13,11 @@ namespace CGT.Unity.TimerSys
         {
             currentTime += hoursElapsed;
         }
+
+        protected override TimerEventArgs CreateEventArgs()
+        {
+            StopwatchEventArgs eventArgs = new StopwatchEventArgs(this);
+            return eventArgs;
+        }
     }
 }

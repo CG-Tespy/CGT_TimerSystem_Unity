@@ -32,10 +32,11 @@ namespace CGT.Unity.TimerSys
 
         protected virtual void AlertListenersFor(OnTimerEvent theEvent)
         {
-            TimerEventArgs eventArgs = new TimerEventArgs();
-            eventArgs.Timer = this;
+            TimerEventArgs eventArgs = CreateEventArgs();
             theEvent.Invoke(eventArgs);
         }
+
+        protected abstract TimerEventArgs CreateEventArgs();
 
         public event OnTimerEvent OnStart = delegate { };
 
