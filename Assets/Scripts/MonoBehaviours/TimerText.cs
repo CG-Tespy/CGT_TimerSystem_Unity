@@ -30,14 +30,12 @@ namespace CGT.Unity.TimerSys
 
 		protected virtual string TextToDisplay { get { return TimeToDisplay.ToString(FormatToDisplayIn); } }
 
-		protected virtual TimeSpan TimeToDisplay
-		{
-			get { return toDisplayFor.CurrentTime; }
-		}
+		protected virtual TimeSpan TimeToDisplay { get { return toDisplayFor.CurrentTime; } }
 
-		protected virtual string FormatToDisplayIn {  get { return formatOptions[displayFormat]; } }
+		protected virtual string FormatToDisplayIn { get { return formatOptions[displayFormat]; } }
 
-		protected Dictionary<TimeDisplayFormat, string> formatOptions = 
+
+		protected static Dictionary<TimeDisplayFormat, string> formatOptions = 
 			new Dictionary<TimeDisplayFormat, string>()
 			{
 				{ TimeDisplayFormat.seconds, "ss" },
