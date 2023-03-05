@@ -1,22 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace CGT.Unity.TimerSys
+﻿namespace CGT.Unity.TimerSys
 {
-	public class StopwatchController : MonoBehaviour
+	public class StopwatchController : TimerController, IStopwatch
 	{
+        protected override void RegisterInSystem()
+        {
+            timerSys.RegisterStopwatch(key);
+        }
 
-		// Use this for initialization
-		void Start()
-		{
-
-		}
-
-		// Update is called once per frame
-		void Update()
-		{
-
-		}
-	}
+    }
 }

@@ -70,11 +70,6 @@ namespace CGT.Unity.TimerSys
             timerSys.RestartTimer(key);
         }
 
-        public virtual void SetFor(TimeSpan duration)
-        {
-            timerSys.SetCountdownFor(key, duration);
-        }
-
         public virtual void Tick()
         {
             Debug.LogWarning("Should not call Tick from a TimerController. Does a whole lotta nothin'.");
