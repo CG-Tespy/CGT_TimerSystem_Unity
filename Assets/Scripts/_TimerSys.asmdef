@@ -1,3 +1,8 @@
-﻿{
-	"name": "_TimerSys"
+{
+    "name": "_TimerSys",
+    "references": [],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
 }
