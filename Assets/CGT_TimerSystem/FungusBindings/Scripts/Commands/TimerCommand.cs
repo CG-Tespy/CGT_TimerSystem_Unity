@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Fungus;
+using FetchArgs = CGT.Unity.TimerSys.Fungus.KeyFetcher.FetchArgs;
 
 namespace CGT.Unity.TimerSys.Fungus
 {
@@ -9,15 +10,6 @@ namespace CGT.Unity.TimerSys.Fungus
 		[VariableProperty(typeof(ObjectVariable))]
 		protected ObjectVariable timerController;
 
-		[Header("For when there's no TimerController")]
-		[SerializeField]
-		protected TimerType timerType;
-
-		public enum TimerType
-		{
-			stopwatch, countdown
-		}
-
 		[SerializeField]
 		[Tooltip("For accessing the timer tied to this particular number")]
 		protected IntegerData timerKeyNum; 
@@ -26,8 +18,7 @@ namespace CGT.Unity.TimerSys.Fungus
 		protected virtual void Awake()
         {
 			EnsureTimerSystemIsThere();
-			EnsureKeychainIsThere();
-			EnsureKeyForNumIsThere();
+			DecideKeyToUse();
         }
 
 		protected virtual void EnsureTimerSystemIsThere()
@@ -44,76 +35,26 @@ namespace CGT.Unity.TimerSys.Fungus
 
 		protected TimerSystem timerSys;
 
-		protected virtual void EnsureKeychainIsThere()
+		protected virtual void DecideKeyToUse()
         {
-			keychain = FindObjectOfType<FungusKeychain>();
-
-			bool isAvailable = keychain != null;
-
-			if (!isAvailable)
-            {
-				GameObject systemKeyGO = new GameObject("FungusTimerKeys");
-				keychain = systemKeyGO.AddComponent<FungusKeychain>();
-            }
+			keyFetcher = new KeyFetcher();
+			FetchArgs args = PrepareFetchArgs();
+			keyToUse = keyFetcher.Fetch(args);
         }
 
-		protected static FungusKeychain keychain;
+		protected KeyFetcher keyFetcher;
 
-		protected virtual void EnsureKeyForNumIsThere()
+		protected virtual FetchArgs PrepareFetchArgs()
         {
-			if (timerType == TimerType.countdown)
-				keychain.RegisterCountdownKeyFor(timerKeyNum);
-			else
-				keychain.RegisterStopwatchKeyFor(timerKeyNum);
-        }
+			FetchArgs args = new FetchArgs();
+			args.hasTimerController = timerController;
+			args.keyNum = timerKeyNum;
+			args.timerType = TimerType.nullType;
 
-		protected virtual TimerKey KeyToUse
-        {
-			get
-			{
-				if (TimerControllerIsValid)
-					return TimerControllerKey;
+			return args;
+		}
 
-				else
-					return NumKey;
-			}
-        }
+		protected TimerKey keyToUse;
 
-		protected virtual bool TimerControllerIsValid
-        {
-			get
-			{
-				bool objectVarSet = timerController != null;
-
-				if (!objectVarSet)
-					return false;
-
-				bool hasActualTimerController = (timerController.Value as TimerController) != null;
-
-				return hasActualTimerController;
-			}
-        }
-
-		protected virtual TimerKey TimerControllerKey
-        {
-			get
-            {
-				// We assume that the controller is valid here
-				TimerController actualController = (TimerController)timerController.Value;
-				return actualController.Key;
-            }
-        }
-
-		protected virtual TimerKey NumKey
-        {
-			get
-            {
-				if (timerType == TimerType.countdown)
-					return keychain.GetCountdownKeyFor(timerKeyNum);
-				else
-					return keychain.GetStopwatchKeyFor(timerKeyNum);
-            }
-        }
-		
     }
 }

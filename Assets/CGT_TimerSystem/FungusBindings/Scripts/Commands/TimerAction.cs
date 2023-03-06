@@ -1,12 +1,17 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Fungus;
+using FetchArgs = CGT.Unity.TimerSys.Fungus.KeyFetcher.FetchArgs;
 
 namespace CGT.Unity.TimerSys.Fungus
 {
     [CommandInfo("CGT TimerSys", "TimerAction", "For having timers do things that each type can do.")]
 	public class TimerAction : TimerCommand
 	{
+        [Header("For when there's no TimerController")]
+        [SerializeField]
+        protected TimerType timerType;
+
         [SerializeField]
         protected GeneralActionType actionType;
 
@@ -32,22 +37,22 @@ namespace CGT.Unity.TimerSys.Fungus
         
         protected virtual void ActionStart()
         {
-            timerSys.StartTimer(KeyToUse);
+            timerSys.StartTimer(keyToUse);
         }
 
         protected virtual void ActionStop()
         {
-            timerSys.StopTimer(KeyToUse);
+            timerSys.StopTimer(keyToUse);
         }
 
         protected virtual void ActionReset()
         {
-            timerSys.ResetTimer(KeyToUse);
+            timerSys.ResetTimer(keyToUse);
         }
 
         protected virtual void ActionRestart()
         {
-            timerSys.RestartTimer(KeyToUse);
+            timerSys.RestartTimer(keyToUse);
         }
 
         public override void OnEnter()
@@ -56,6 +61,14 @@ namespace CGT.Unity.TimerSys.Fungus
             System.Action act = actionFuncs[actionType];
             act();
             Continue();
+        }
+
+        protected override KeyFetcher.FetchArgs PrepareFetchArgs()
+        {
+            FetchArgs args = base.PrepareFetchArgs();
+            args.timerType = timerType;
+
+            return args;
         }
 
     }
