@@ -11,18 +11,13 @@ namespace CGT.Unity.TimerSys
         [Tooltip("Triggers when this countdown reaches zero.")]
         protected UnityEvent OnEnd = new UnityEvent();
 
-        [Header("Starting Time")]
         [SerializeField]
-        protected int milliseconds = 100;
-
-        [SerializeField]
-        protected int seconds = 10, minutes, hours, days;
+        protected TSTimeSpan startingTime = new TSTimeSpan(0, 0, 0, 10, 100);
 
         protected override void Awake()
         {
             base.Awake();
-            TimeSpan startingTime = new TimeSpan(days, hours, minutes, seconds, milliseconds);
-            SetFor(startingTime);
+            SetFor(startingTime.ToNormalTimeSpan());
             ListenForTimerEnd();
         }
 
