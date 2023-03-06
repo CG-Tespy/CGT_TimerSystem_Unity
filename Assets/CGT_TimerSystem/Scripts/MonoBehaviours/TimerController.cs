@@ -24,9 +24,11 @@ namespace CGT.Unity.TimerSys
             }
         }
 
-        protected abstract void RegisterInSystem();
+        protected static TimerSystem timerSys;
 
         protected TimerKey key;
+
+        protected abstract void RegisterInSystem();
 
         /// <summary>
         /// For the timer tied to this controller.
@@ -48,8 +50,6 @@ namespace CGT.Unity.TimerSys
 
             set { timerSys.SetTimerTimeScale(key, value); }
         }
-
-        protected static TimerSystem timerSys;
 
         public virtual void StartUp()
         {
@@ -80,10 +80,9 @@ namespace CGT.Unity.TimerSys
             Debug.LogWarning("Should not call Tick from a TimerController. Does a whole lotta nothin'.");
         }
 
-        public UnityEvent OnStart = new UnityEvent();
-        public UnityEvent OnStop = new UnityEvent();
-        public UnityEvent OnReset = new UnityEvent();
-        public UnityEvent OnRestart = new UnityEvent();
+        [SerializeField]
+        protected UnityEvent OnStart = new UnityEvent(), OnStop = new UnityEvent(),
+            OnReset = new UnityEvent(), OnRestart = new UnityEvent();
 
     }
 }
