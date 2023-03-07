@@ -8,12 +8,12 @@ namespace CGT.Unity.TimerSys.Fungus
     [CommandInfo("CGT TimerSys", "TimerAction", "For having timers do things that each type can do.")]
 	public class TimerAction : TimerCommand
 	{
-        [Header("For when there's no TimerController")]
-        [SerializeField]
-        protected TimerType timerType;
-
         [SerializeField]
         protected GeneralActionType actionType;
+
+        [Header("When not working with a Timer Controller")]
+        [SerializeField]
+        protected TimerType timerType;
 
         public enum GeneralActionType
         {
@@ -23,6 +23,7 @@ namespace CGT.Unity.TimerSys.Fungus
         protected override void Awake()
         {
             base.Awake();
+            RegisterActionFuncs();
         }
 
         protected virtual void RegisterActionFuncs()

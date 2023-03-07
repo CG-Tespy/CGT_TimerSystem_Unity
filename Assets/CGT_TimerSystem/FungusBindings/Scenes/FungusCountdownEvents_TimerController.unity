@@ -984,7 +984,9 @@ GameObject:
   - component: {fileID: 681352455}
   - component: {fileID: 681352458}
   - component: {fileID: 681352457}
+  - component: {fileID: 681352459}
   - component: {fileID: 681352456}
+  - component: {fileID: 681352460}
   m_Layer: 0
   m_Name: OnButtonPresses
   m_TagString: Untagged
@@ -1007,20 +1009,21 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &681352456
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 681352454}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10eaeba5e91be479e95d4fa48679f549, type: 3}
+  m_Script: {fileID: 11500000, guid: b1941e052c0ed4280b25507cd2e6ad8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentBlock: {fileID: 681352457}
-  targetButton: {fileID: 0}
+  scope: 0
+  key: timer
+  value: {fileID: 572799945}
 --- !u!114 &681352457
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 681352454}
@@ -1040,8 +1043,9 @@ MonoBehaviour:
   itemId: 0
   blockName: StartButtonClicked
   description: 
-  eventHandler: {fileID: 681352456}
-  commandList: []
+  eventHandler: {fileID: 681352460}
+  commandList:
+  - {fileID: 681352459}
 --- !u!114 &681352458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1068,7 +1072,8 @@ MonoBehaviour:
   selectedBlocks:
   - {fileID: 681352457}
   selectedCommands: []
-  variables: []
+  variables:
+  - {fileID: 681352456}
   description: 
   stepPause: 0
   colorCommands: 1
@@ -1079,6 +1084,38 @@ MonoBehaviour:
   hideCommands: []
   luaEnvironment: {fileID: 0}
   luaBindingName: flowchart
+--- !u!114 &681352459
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 681352454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9572c5f4b92389d4dbbe498b1d625d73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemId: 1
+  indentLevel: 0
+  hasTimerController: {fileID: 681352456}
+  timerKeyNum:
+    integerRef: {fileID: 0}
+    integerVal: 0
+  actionType: 0
+  timerType: 2
+--- !u!114 &681352460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 681352454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10eaeba5e91be479e95d4fa48679f549, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentBlock: {fileID: 681352457}
+  targetButton: {fileID: 1750155668}
 --- !u!1 &720293358
 GameObject:
   m_ObjectHideFlags: 0
@@ -1400,9 +1437,9 @@ GameObject:
   - component: {fileID: 960722214}
   - component: {fileID: 960722209}
   - component: {fileID: 960722212}
-  - component: {fileID: 960722213}
   - component: {fileID: 960722211}
   - component: {fileID: 960722210}
+  - component: {fileID: 960722213}
   m_Layer: 0
   m_Name: DisplayTime
   m_TagString: Untagged
@@ -1435,8 +1472,7 @@ MonoBehaviour:
     height: 0
   selectedBlocks:
   - {fileID: 960722212}
-  selectedCommands:
-  - {fileID: 960722211}
+  selectedCommands: []
   variables:
   - {fileID: 960722210}
   description: 
@@ -1510,17 +1546,17 @@ MonoBehaviour:
   - {fileID: 960722211}
 --- !u!114 &960722213
 MonoBehaviour:
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 960722208}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2f6487d21a03404cb21b245f0242e79, type: 3}
+  m_Script: {fileID: 11500000, guid: d2fbef54b0b0adb41ab9b447a8f3cbdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parentBlock: {fileID: 960722212}
-  waitForFrames: 1
+  FireOn: 1
 --- !u!4 &960722214
 Transform:
   m_ObjectHideFlags: 0
@@ -2280,7 +2316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61dddfdc5e0e44ca298d8f46f7f5a915, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedFlowchart: {fileID: 960722209}
+  selectedFlowchart: {fileID: 681352458}
 --- !u!4 &1913336001
 Transform:
   m_ObjectHideFlags: 1

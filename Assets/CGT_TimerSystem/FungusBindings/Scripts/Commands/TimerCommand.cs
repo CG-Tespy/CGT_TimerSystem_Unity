@@ -11,7 +11,7 @@ namespace CGT.Unity.TimerSys.Fungus
 		protected GameObjectVariable hasTimerController;
 
 		[SerializeField]
-		[Tooltip("For accessing the timer tied to this particular number")]
+		[Tooltip("For accessing the timer tied to this particular number as opposed to a Timer Controller")]
 		protected IntegerData timerKeyNum; 
 		// ^If there is no timer controller assigned, this will instead be used to access the timer
 
