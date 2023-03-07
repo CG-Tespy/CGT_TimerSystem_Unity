@@ -24,7 +24,8 @@ namespace CGT.Unity.TimerSys.Fungus
         {
 			if (IsValid(args.hasTimerController))
             {
-				TimerController controller = args.hasTimerController.Value as TimerController;
+				GameObject controllerGO = args.hasTimerController.Value;
+				TimerController controller = controllerGO.GetComponent<TimerController>();
 				return controller.Key;
             }
 			else
@@ -35,21 +36,22 @@ namespace CGT.Unity.TimerSys.Fungus
 
 		public class FetchArgs
 		{
-			public ObjectVariable hasTimerController;
+			public GameObjectVariable hasTimerController;
 			public int keyNum;
 			public TimerType timerType;
 		}
 
-		protected virtual bool IsValid(ObjectVariable hasTimerController)
+		protected virtual bool IsValid(GameObjectVariable hasTimerController)
         {
 			bool isNothing = hasTimerController == null;
 			if (isNothing)
 				return false;
 
-			TimerController controller = hasTimerController.Value as TimerController;
+			GameObject controllerGO = hasTimerController.Value;
+			TimerController controller = controllerGO.GetComponent<TimerController>();
 			bool hasActualController = controller != null;
 
-			return hasTimerController;
+			return hasActualController;
         }
 
 		protected virtual TimerKey FetchKeyByNum(FetchArgs args)

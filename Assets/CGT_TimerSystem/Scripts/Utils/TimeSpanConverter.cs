@@ -14,7 +14,7 @@ namespace CGT.Unity.TimerSys
 		public virtual string Convert(TimeSpan timeSpan, TimeDisplayFormat displayFormat)
         {
 			string formatString = formatOptions[displayFormat];
-			return timeSpan.ToString();
+			return timeSpan.ToString(formatString);
         }
 
 		protected static Dictionary<TimeDisplayFormat, string> formatOptions =

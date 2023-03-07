@@ -7,8 +7,8 @@ namespace CGT.Unity.TimerSys.Fungus
 	public abstract class TimerCommand : Command
 	{
 		[SerializeField]
-		[VariableProperty(typeof(ObjectVariable))]
-		protected ObjectVariable hasTimerController;
+		[VariableProperty(typeof(GameObjectVariable))]
+		protected GameObjectVariable hasTimerController;
 
 		[SerializeField]
 		[Tooltip("For accessing the timer tied to this particular number")]
@@ -18,8 +18,13 @@ namespace CGT.Unity.TimerSys.Fungus
 		protected virtual void Awake()
         {
 			EnsureTimerSystemIsThere();
-			DecideKeyToUse();
+			
         }
+
+		protected virtual void Start()
+        {
+			DecideKeyToUse();
+		}
 
 		protected virtual void EnsureTimerSystemIsThere()
 		{
