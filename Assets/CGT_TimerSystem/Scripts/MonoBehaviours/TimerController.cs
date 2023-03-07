@@ -9,18 +9,18 @@ namespace CGT.Unity.TimerSys
         protected virtual void Awake()
         {
             EnsureTimerSysIsThere();
-            timerSys = FindObjectOfType<TimerSystem>();
             key = new TimerKey(this);
             RegisterInSystem();
         }
 
         protected virtual void EnsureTimerSysIsThere()
         {
-            bool isThere = FindObjectOfType<TimerSystem>() != null;
+            timerSys = FindObjectOfType<TimerSystem>();
+            bool isThere = timerSys != null;
             if (!isThere)
             {
                 GameObject holdsTimerSystem = new GameObject("TimerSystem");
-                holdsTimerSystem.AddComponent<TimerSystem>();
+                timerSys = holdsTimerSystem.AddComponent<TimerSystem>();
             }
         }
 
@@ -29,6 +29,35 @@ namespace CGT.Unity.TimerSys
         protected TimerKey key;
 
         protected abstract void RegisterInSystem();
+
+
+        protected virtual void OnEnable()
+        {
+            LinkToTimerEvents();
+        }
+
+        /// <summary>
+        /// So that the UnityEvents here fire off in response to the underlying Timer events
+        /// doing the same.
+        /// </summary>
+        protected virtual void LinkToTimerEvents()
+        {
+            PrepareEventLinker();
+            linker.LinkEvents();
+        }
+
+        protected virtual void PrepareEventLinker()
+        {
+            linker = new TimerEventLinker();
+            linker.TimerController = this;
+        }
+
+        protected TimerEventLinker linker;
+
+        protected virtual void OnDisable()
+        {
+            linker.UnlinkEvents();
+        }
 
         /// <summary>
         /// For the timer tied to this controller.
@@ -54,25 +83,25 @@ namespace CGT.Unity.TimerSys
         public virtual void StartUp()
         {
             timerSys.StartTimer(key);
-            OnStart.Invoke();
+            onStart.Invoke();
         }
 
         public virtual void Stop()
         {
             timerSys.StopTimer(key);
-            OnStop.Invoke();
+            onStop.Invoke();
         }
 
         public virtual void Reset()
         {
             timerSys.ResetTimer(key);
-            OnReset.Invoke();
+            onReset.Invoke();
         }
 
         public virtual void Restart()
         {
             timerSys.RestartTimer(key);
-            OnRestart.Invoke();
+            onRestart.Invoke();
         }
 
         public virtual void Tick()
@@ -80,9 +109,19 @@ namespace CGT.Unity.TimerSys
             Debug.LogWarning("Should not call Tick from a TimerController. Does a whole lotta nothin'.");
         }
 
+
+        public virtual UnityEvent OnStart { get { return onStart; } }
+        public virtual UnityEvent OnStop { get { return onStop; } }
+        public virtual UnityEvent OnReset { get { return onReset; } }
+        public virtual UnityEvent OnRestart { get { return onRestart; } }
+
         [SerializeField]
-        protected UnityEvent OnStart = new UnityEvent(), OnStop = new UnityEvent(),
-            OnReset = new UnityEvent(), OnRestart = new UnityEvent();
+        protected UnityEvent onStart = new UnityEvent(),
+            onStop = new UnityEvent(),
+            onReset = new UnityEvent(),
+            onRestart = new UnityEvent();
+
+       
 
     }
 }

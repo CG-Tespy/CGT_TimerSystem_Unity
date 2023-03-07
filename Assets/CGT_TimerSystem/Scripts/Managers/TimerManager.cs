@@ -74,7 +74,7 @@ namespace CGT.Unity.TimerSys
 
 		public virtual TimerEvents Events { get; protected set; }
 		
-		public class TimerEvents
+		public class TimerEvents : ITimerEvents
 		{
 			public TimerEvents(TimerManager<TTimer> manager)
             {
