@@ -8,7 +8,7 @@ namespace CGT.Unity.TimerSys.Fungus
 	{
 		[SerializeField]
 		[VariableProperty(typeof(ObjectVariable))]
-		protected ObjectVariable timerController;
+		protected ObjectVariable hasTimerController;
 
 		[SerializeField]
 		[Tooltip("For accessing the timer tied to this particular number")]
@@ -47,7 +47,7 @@ namespace CGT.Unity.TimerSys.Fungus
 		protected virtual FetchArgs PrepareFetchArgs()
         {
 			FetchArgs args = new FetchArgs();
-			args.hasTimerController = timerController;
+			args.hasTimerController = hasTimerController;
 			args.keyNum = timerKeyNum;
 			args.timerType = TimerType.nullType;
 
@@ -55,6 +55,7 @@ namespace CGT.Unity.TimerSys.Fungus
 		}
 
 		protected TimerKey keyToUse;
+
 
     }
 }
