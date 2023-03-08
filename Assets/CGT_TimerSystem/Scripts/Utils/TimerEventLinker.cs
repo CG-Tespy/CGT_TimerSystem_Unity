@@ -12,8 +12,16 @@ namespace CGT.Unity.TimerSys
 			timerSys = GameObject.FindObjectOfType<TimerSystem>();
 		}
 
-		public TimerController TimerController { get; set; }
-		public ITimerEvents TimerEvents { get; set; }
+		public virtual TimerController TimerController
+        {
+			get { return timerController; }
+			set { timerController = value; }
+        }
+		public virtual ITimerEvents TimerEvents
+        {
+			get { return events; }
+			set { events = value; }
+        }
 
 		protected TimerController timerController;
 		protected ITimerEvents events;
@@ -31,22 +39,22 @@ namespace CGT.Unity.TimerSys
 
 		protected virtual void OnStart(TimerEventArgs args)
         {
-			timerController.OnStart.Invoke();
+			timerController.Events.OnStart.Invoke();
         }
 
 		protected virtual void OnStop(TimerEventArgs args)
         {
-			timerController.OnStop.Invoke();
+			timerController.Events.OnStop.Invoke();
         }
 
 		protected virtual void OnReset(TimerEventArgs args)
         {
-			timerController.OnReset.Invoke();
+			timerController.Events.OnReset.Invoke();
         }
 
 		protected virtual void OnRestart(TimerEventArgs args)
         {
-			timerController.OnRestart.Invoke();
+			timerController.Events.OnRestart.Invoke();
         }
 
 		public virtual void UnlinkEvents()

@@ -8,8 +8,11 @@ namespace CGT.Unity.TimerSys
     public class CountdownController : TimerController, ICountdown
 	{
         [SerializeField]
-        [Tooltip("Triggers when this countdown reaches zero.")]
-        protected UnityEvent OnEnd = new UnityEvent();
+        protected CountdownUnityEvents events = new CountdownUnityEvents();
+
+        public override ITimerUnityEvents Events { get { return events; } }
+        public virtual UnityEvent OnEnd { get { return events.OnEnd; } }
+
 
         [SerializeField]
         protected TSTimeSpan startingTime = new TSTimeSpan(0, 0, 0, 10, 100);
@@ -28,11 +31,12 @@ namespace CGT.Unity.TimerSys
 
         protected virtual void OnTimerEnd(TimerEventArgs args)
         {
-            OnEnd.Invoke();
+            events.OnEnd.Invoke();
         }
 
-        protected virtual void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             UnlistenForTimerEnd();
         }
 
@@ -61,5 +65,10 @@ namespace CGT.Unity.TimerSys
             get { return timerSys.GetCountdownTimeLastSetFor(key); }
         }
 
+        protected override void PrepareEventLinker()
+        {
+            base.PrepareEventLinker();
+            linker.TimerEvents = timerSys.CDEvents;
+        }
     }
 }
