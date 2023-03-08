@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 namespace CGT.Unity.TimerSys
 {
+	[System.Serializable]
 	public class CountdownUnityEvents : TimerUnityEvents
 	{
 		[SerializeField]
