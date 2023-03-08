@@ -34,28 +34,10 @@ namespace CGT.Unity.TimerSys
 		public abstract void DisplayTime();
 		public abstract void StopDisplayingTime();
 
-		protected virtual string TextToDisplay { get { return TimeToDisplay.ToString(FormatToDisplayIn); } }
+		protected virtual string TextToDisplay 
+		{ get { return TSUtils.TSToString(TimeToDisplay, displayFormat); } }
 
 		protected virtual TimeSpan TimeToDisplay { get { return toDisplayFor.CurrentTime; } }
-
-		protected virtual string FormatToDisplayIn { get { return formatOptions[displayFormat]; } }
-
-
-		protected static Dictionary<TimeDisplayFormat, string> formatOptions = 
-			new Dictionary<TimeDisplayFormat, string>()
-			{
-				{ TimeDisplayFormat.seconds, "ss" },
-				{ TimeDisplayFormat.minutes, "mm" },
-				{ TimeDisplayFormat.hours, "hh" },
-				{ TimeDisplayFormat.days, "dd" },
-
-				{ TimeDisplayFormat.minutesSeconds, "mm':'ss" },
-				{ TimeDisplayFormat.hoursMinutes, "hh':'mm" },
-
-				{ TimeDisplayFormat.hoursMinutesSeconds, "hh':'mm':'ss" },
-				{ TimeDisplayFormat.daysHoursMinutesSeconds, "dd':'hh':'mm':'ss" }
-
-			};
 
 	}
 }

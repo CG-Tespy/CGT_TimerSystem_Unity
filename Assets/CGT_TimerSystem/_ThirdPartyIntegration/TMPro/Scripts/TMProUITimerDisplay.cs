@@ -16,8 +16,7 @@ namespace CGT.Unity.TimerSys
 
         protected virtual void UpdateTextField()
         {
-            string timeToDisplayString = TimeToDisplay.ToString(FormatToDisplayIn);
-            textField.text = timeToDisplayString;
+            textField.text = TextToDisplay;
         }
 
         public override void StopDisplayingTime()
