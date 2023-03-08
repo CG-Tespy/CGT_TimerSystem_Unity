@@ -24,12 +24,10 @@ namespace CGT.Unity.TimerSys.Fungus
         {
             base.OnEnter();
             TimeSpan currentTime = timerSys.GetTimerCurrentTime(keyToUse);
-            string toDisplay = converter.Convert(currentTime, displayFormat);
+            string toDisplay = TSUtils.TSToString(currentTime, displayFormat);
             textField.text = toDisplay;
             Continue();
         }
-
-        protected TimeSpanConverter converter = new TimeSpanConverter();
 
         protected override KeyFetcher.FetchArgs PrepareFetchArgs()
         {
